@@ -1,0 +1,298 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model with role-based access control
+model User {
+  id           String   @id @default(uuid())
+  firstName    String
+  lastName     String
+  email        String   @unique
+  passwordHash String
+  role         UserRole
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relationships based on roles
+  createdOrders   Order[] @relation("CreatedBy")
+  validatedOrders Order[] @relation("ValidatedBy")
+  preparedOrders  Order[] @relation("PreparedBy")
+
+  // If a user belongs to a specific service
+  serviceId String?
+  service   Service? @relation(fields: [serviceId], references: [id])
+}
+
+enum UserRole {
+  ADMIN
+  PHARMACIST
+  SERVICE_COORDINATOR
+  ORDER_PREPARER
+}
+
+// Hospital service model
+model Service {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  users  User[]
+  orders Order[]
+}
+
+// Supplier model
+model Supplier {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  contactName String?
+  email       String?
+  phone       String?
+  address     String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  stockEntries StockEntry[]
+}
+
+// Therapeutic Class model
+model TherapeuticClass {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  medications Medication[]
+}
+
+// Medication model
+model Medication {
+  id              String         @id @default(uuid())
+  dci             String // International Common Denomination
+  commercialName  String
+  form            MedicationForm
+  dosage          String // More complex to make into enum due to variety
+  packagingUnit   PackagingUnit
+  unitsPerPackage Int
+  minStockLevel   Int // For alerts
+  isActive        Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relationships
+  therapeuticClassId String
+  therapeuticClass   TherapeuticClass  @relation(fields: [therapeuticClassId], references: [id])
+  batches            MedicationBatch[]
+  orderItems         OrderItem[]
+}
+
+enum MedicationForm {
+  TABLET
+  CAPSULE
+  LIQUID
+  INJECTION
+  CREAM
+  OINTMENT
+  SUPPOSITORY
+  INHALER
+  PATCH
+  DROPS
+  POWDER
+  SYRUP
+  OTHER
+}
+
+enum PackagingUnit {
+  BOX
+  BOTTLE
+  VIAL
+  AMPOULE
+  TUBE
+  BLISTER_PACK
+  JAR
+  BAG
+  SACHET
+  SYRINGE
+  INHALER_DEVICE
+  OTHER
+}
+
+// Medication Batch model (for expiration tracking)
+model MedicationBatch {
+  id              String   @id @default(uuid())
+  batchNumber     String
+  expirationDate  DateTime
+  currentQuantity Int
+  initialQuantity Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relationships
+  medicationId String
+  medication   Medication   @relation(fields: [medicationId], references: [id])
+  stockEntries StockEntry[]
+  stockExits   StockExit[]
+}
+
+// Stock Entry model (for incoming stock)
+model StockEntry {
+  id            String   @id @default(uuid())
+  quantity      Int
+  entryDate     DateTime @default(now())
+  invoiceNumber String?
+  unitPrice     Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relationships
+  batchId    String
+  batch      MedicationBatch @relation(fields: [batchId], references: [id])
+  supplierId String
+  supplier   Supplier        @relation(fields: [supplierId], references: [id])
+}
+
+// Stock Exit model (for outgoing stock)
+model StockExit {
+  id        String     @id @default(uuid())
+  quantity  Int
+  exitDate  DateTime   @default(now())
+  reason    ExitReason
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  // Relationships
+  batchId     String
+  batch       MedicationBatch @relation(fields: [batchId], references: [id])
+  orderItemId String?
+  orderItem   OrderItem?      @relation(fields: [orderItemId], references: [id])
+}
+
+enum ExitReason {
+  ORDER_FULFILLMENT
+  EXPIRATION
+  DAMAGE
+  RETURN
+  OTHER
+}
+
+// Order model (for medication orders from services)
+model Order {
+  id          String      @id @default(uuid())
+  orderNumber String      @unique
+  status      OrderStatus
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  validatedAt DateTime?
+  preparedAt  DateTime?
+  deliveredAt DateTime?
+  notes       String?
+
+  // Relationships
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  createdById String
+  createdBy   User   @relation("CreatedBy", fields: [createdById], references: [id])
+
+  validatedById String?
+  validatedBy   User?   @relation("ValidatedBy", fields: [validatedById], references: [id])
+
+  preparedById String?
+  preparedBy   User?   @relation("PreparedBy", fields: [preparedById], references: [id])
+
+  orderItems   OrderItem[]
+  deliveryNote DeliveryNote?
+}
+
+enum OrderStatus {
+  DRAFT
+  SUBMITTED
+  VALIDATED
+  PARTIALLY_VALIDATED
+  IN_PREPARATION
+  PREPARED
+  DELIVERED
+  CANCELLED
+}
+
+// Order Item model (individual medications in an order)
+model OrderItem {
+  id                String          @id @default(uuid())
+  requestedQuantity Int
+  validatedQuantity Int?
+  preparedQuantity  Int?
+  status            OrderItemStatus
+  notes             String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  // Relationships
+  orderId      String
+  order        Order       @relation(fields: [orderId], references: [id])
+  medicationId String
+  medication   Medication  @relation(fields: [medicationId], references: [id])
+  stockExits   StockExit[]
+}
+
+enum OrderItemStatus {
+  PENDING
+  VALIDATED
+  PARTIALLY_VALIDATED
+  NOT_AVAILABLE
+  PREPARED
+  DELIVERED
+}
+
+// Delivery Note model
+model DeliveryNote {
+  id         String    @id @default(uuid())
+  noteNumber String    @unique
+  createdAt  DateTime  @default(now())
+  printedAt  DateTime?
+
+  // Relationships
+  orderId String @unique
+  order   Order  @relation(fields: [orderId], references: [id])
+}
+
+model Alert {
+  id        String    @id @default(uuid())
+  alertType AlertType
+  message   String
+  isRead    Boolean   @default(false)
+  createdAt DateTime  @default(now())
+
+  // Optional relationships to relevant entities
+  medicationId    String?
+  batchId         String?
+  relatedEntityId String?
+}
+
+enum AlertType {
+  LOW_STOCK
+  EXPIRATION
+  ORDER_WAITING_VALIDATION
+  ORDER_READY
+  SYSTEM
+}
