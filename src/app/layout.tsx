@@ -2,6 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { Geist, Geist_Mono } from "next/font/google";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { Toaster } from "sonner";
+import { AppSidebar } from "@/components/app-sidebar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,7 +35,22 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider>{children}</SessionProvider>
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+            <header className="flex h-14 shrink-0 items-center gap-2 bg-white border-b">
+              <div className="flex flex-1 justify-between items-center gap-2 px-3">
+                <SidebarTrigger />
+                {/* <UserDropdownMenu /> */}
+              </div>
+              <div className="ml-auto px-3"></div>
+            </header>
+            <SessionProvider>
+              <div className="p-6 h-full">{children}</div>
+              <Toaster />
+            </SessionProvider>
+          </SidebarInset>
+        </SidebarProvider>
       </body>
     </html>
   );

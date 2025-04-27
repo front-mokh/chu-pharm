@@ -16,5 +16,5 @@ export default async function RootLayout({
     redirect("/auth/signin");
   }
 
-  return <div>{children}</div>;
+  return <div className="w-full">{children}</div>;
 }
