@@ -13,8 +13,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  console.log("THE REDIRECT LAYOUT IS RUNNING");
 
+  const session = await auth();
   if (!session || !session.user) {
     redirect("/auth/signin");
   }
@@ -22,7 +23,7 @@ export default async function RootLayout({
   const userId = session.user.id;
 
   if (!userId) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   let role;
@@ -33,7 +34,7 @@ export default async function RootLayout({
   }
 
   if (!role) {
-    redirect("/auth/signin");
+    redirect("/signin");
   }
 
   switch (role) {

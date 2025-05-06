@@ -85,9 +85,7 @@ export const authConfig: NextAuthConfig = {
     },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isProtected =
-        nextUrl.pathname.startsWith("/protected") ||
-        nextUrl.pathname.startsWith("/admin");
+      const isProtected = true;
       if (isProtected) {
         if (isLoggedIn) return true;
         return false; // redirect to login

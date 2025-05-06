@@ -141,8 +141,7 @@ export default function AddUserDialog({ services }: AddUserDialogProps) {
             options={roleOptions}
           />
 
-          {(watchRole === "SERVICE_COORDINATOR" ||
-            watchRole === "ORDER_PREPARER") && (
+          {watchRole === "SERVICE_COORDINATOR" && (
             <SelectField
               control={form.control}
               name="serviceId"
