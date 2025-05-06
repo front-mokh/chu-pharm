@@ -167,8 +167,7 @@ export function UpdateUserDialog({
             options={roleOptions}
           />
 
-          {(watchRole === "SERVICE_COORDINATOR" ||
-            watchRole === "ORDER_PREPARER") && (
+          {watchRole === "SERVICE_COORDINATOR" && (
             <SelectField
               control={form.control}
               name="serviceId"

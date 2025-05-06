@@ -58,6 +58,19 @@ export type UpdateSupplierInput = {
   isActive: boolean;
 };
 
+// Types for Therapeutic Class inputs
+export type CreateTherapeuticClassInput = {
+  name: string;
+  description?: string;
+  isActive: boolean;
+};
+
+export type UpdateTherapeuticClassInput = {
+  name: string;
+  description?: string;
+  isActive: boolean;
+};
+
 // Get the current session or throw an error
 async function getSessionOrThrow() {
   const session = await auth();
@@ -374,6 +387,86 @@ export async function getSupplierById(id: string) {
     return supplier;
   } catch (error) {
     console.error("Error fetching supplier:", error);
+    throw error;
+  }
+}
+
+// Create CRUD functions for Therapeutic Classes
+export async function createTherapeuticClass(
+  data: CreateTherapeuticClassInput
+) {
+  try {
+    await getSessionOrThrow();
+
+    const therapeuticClass = await prisma.therapeuticClass.create({
+      data,
+    });
+
+    revalidatePath("/admin/therapeutic-classes");
+    return { success: true, data: therapeuticClass };
+  } catch (error) {
+    console.error("Error creating therapeutic class:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Une erreur s'est produite",
+    };
+  }
+}
+export async function updateTherapeuticClass(
+  id: string,
+  data: UpdateTherapeuticClassInput
+) {
+  try {
+    await getSessionOrThrow();
+
+    const therapeuticClass = await prisma.therapeuticClass.update({
+      where: { id },
+      data,
+    });
+
+    revalidatePath("/admin/therapeutic-classes");
+    return { success: true, data: therapeuticClass };
+  } catch (error) {
+    console.error("Error updating therapeutic class:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Une erreur s'est produite",
+    };
+  }
+}
+
+export async function deleteTherapeuticClass(id: string) {
+  try {
+    await getSessionOrThrow();
+
+    const therapeuticClass = await prisma.therapeuticClass.delete({
+      where: { id },
+    });
+    revalidatePath("/admin/therapeutic-classes");
+    return { success: true, data: therapeuticClass };
+  } catch (error) {
+    console.error("Error deleting therapeutic class:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Une erreur s'est produite",
+    };
+  }
+}
+
+export async function getAllTherapeuticClasses() {
+  try {
+    await getSessionOrThrow();
+
+    const therapeuticClasses = await prisma.therapeuticClass.findMany({
+      orderBy: { name: "asc" },
+    });
+
+    return therapeuticClasses;
+  } catch (error) {
+    console.error("Error fetching therapeutic classes:", error);
     throw error;
   }
 }

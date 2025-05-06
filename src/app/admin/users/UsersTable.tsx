@@ -59,6 +59,16 @@ export default function UsersTable({
           </TableRow>
         </TableHeader>
         <TableBody>
+          {users.length === 0 && (
+            <TableRow>
+              <TableCell
+                colSpan={5}
+                className="text-center text-muted-foreground"
+              >
+                Aucun utilisateur trouvé
+              </TableCell>
+            </TableRow>
+          )}
           {users.map((user) => (
             <TableRow key={user.id}>
               <TableCell className="font-medium">{user.lastName}</TableCell>
