@@ -342,7 +342,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/tokita/Documents/dev/chu-pharm/src/generated/prisma",
+      "value": "/home/tokita/Documents/dev/chu-pharme/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -356,12 +356,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/tokita/Documents/dev/chu-pharm/prisma/schema.prisma",
+    "sourceFilePath": "/home/tokita/Documents/dev/chu-pharme/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.6.0",
@@ -370,11 +369,12 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://myuserd:strongpassword@localhost:5432/mydb"
+        "value": null
       }
     }
   },
