@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import {
-  Layers,
+  Folders,
+  GalleryHorizontalEnd,
   LucideIcon,
   UsersRound,
   Contact,
@@ -65,12 +66,12 @@ export function AppSidebar({
         {
           title: "Classes Thérapeutiques",
           url: "/admin/therapeutic-classes",
-          icon: UsersRound,
+          icon: Folders,
         },
         {
           title: "Sous classes",
           url: "/admin/subclasses",
-          icon: UsersRound,
+          icon: GalleryHorizontalEnd,
         },
       ];
       break;
