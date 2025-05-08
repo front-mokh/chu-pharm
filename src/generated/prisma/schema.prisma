@@ -73,9 +73,9 @@ model Supplier {
   stockEntries StockEntry[]
 }
 
-// Therapeutic Class model
 model TherapeuticClass {
   id          String   @id @default(uuid())
+  code        String   @unique // 2-digit numeric code
   name        String   @unique
   description String?
   isActive    Boolean  @default(true)
@@ -84,12 +84,29 @@ model TherapeuticClass {
 
   // Relationships
   medications Medication[]
+  subClasses  SubClass[]
+}
+
+model SubClass {
+  id          String   @id @default(uuid())
+  code        String   @unique // One letter code
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  therapeuticClassId String
+  therapeuticClass   TherapeuticClass @relation(fields: [therapeuticClassId], references: [id])
+  medications        Medication[]
 }
 
 // Medication model
 model Medication {
   id              String         @id @default(uuid())
   dci             String // International Common Denomination
+  codedci         String         @unique
   commercialName  String
   form            MedicationForm
   dosage          String // More complex to make into enum due to variety
@@ -102,9 +119,14 @@ model Medication {
 
   // Relationships
   therapeuticClassId String
-  therapeuticClass   TherapeuticClass  @relation(fields: [therapeuticClassId], references: [id])
-  batches            MedicationBatch[]
-  orderItems         OrderItem[]
+  therapeuticClass   TherapeuticClass @relation(fields: [therapeuticClassId], references: [id])
+
+  // New relationship with SubClass
+  subClassId String?
+  subClass   SubClass? @relation(fields: [subClassId], references: [id])
+
+  batches    MedicationBatch[]
+  orderItems OrderItem[]
 }
 
 enum MedicationForm {

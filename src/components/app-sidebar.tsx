@@ -62,6 +62,16 @@ export function AppSidebar({
           url: "/admin/suppliers",
           icon: Contact,
         },
+        {
+          title: "Classes Thérapeutiques",
+          url: "/admin/therapeutic-classes",
+          icon: UsersRound,
+        },
+        {
+          title: "Sous classes",
+          url: "/admin/subclasses",
+          icon: UsersRound,
+        },
       ];
       break;
     case "PHARMACIST":

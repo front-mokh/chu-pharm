@@ -26,6 +26,7 @@ export default function TherapeuticClassesTable({
         <TableHeader>
           <TableRow>
             <TableHead>Nom de la classe</TableHead>
+            <TableHead>code de la classe</TableHead>
             <TableHead className="text-center">Description</TableHead>
             <TableHead>Statut</TableHead>
             <TableHead>Date de création</TableHead>
@@ -48,6 +49,9 @@ export default function TherapeuticClassesTable({
             <TableRow key={therapeuticClass.id}>
               <TableCell className="font-medium">
                 {therapeuticClass.name}
+              </TableCell>
+              <TableCell className="font-medium">
+                {therapeuticClass.code}
               </TableCell>
               <TableCell className="text-center">
                 {therapeuticClass.description
