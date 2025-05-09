@@ -1,7 +1,4 @@
-//Complete this componenet
-
 "use client";
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import CustomDialog from "@/components/custom/CustomDialog";
@@ -15,7 +12,12 @@ import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
 import { createTherapeuticClass } from "@/lib/services";
 
+// Updated schema with code field
 const createTherapeuticClassSchema = z.object({
+  code: z.string()
+    .min(2, "Le code doit contenir 2 chiffres")
+    .max(2, "Le code doit contenir 2 chiffres")
+    .regex(/^\d{2}$/, "Le code doit contenir uniquement 2 chiffres"),
   name: z.string().min(1, "Le nom de la classe thérapeutique est obligatoire"),
   description: z.string().optional(),
   isActive: z.boolean().default(true),
@@ -39,6 +41,7 @@ export default function AddTherapeuticClassDialog() {
   const form = useForm<CreateTherapeuticClassInput>({
     resolver: zodResolver(createTherapeuticClassSchema),
     defaultValues: {
+      code: "",
       isActive: true,
     },
   });
@@ -47,14 +50,13 @@ export default function AddTherapeuticClassDialog() {
     setIsSubmitting(true);
     try {
       const result = await createTherapeuticClass(values);
-
       if (result.success) {
-        toast.success("Classe thérapeutique créé avec succès");
+        toast.success("Classe thérapeutique créée avec succès");
         handleOpenChange(false);
       } else {
         toast.error(
           result.error ||
-            "Erreur lors de la création de la classe thérapeutique"
+          "Erreur lors de la création de la classe thérapeutique"
         );
       }
     } catch (error) {
@@ -79,20 +81,29 @@ export default function AddTherapeuticClassDialog() {
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          {/* Add the new code field */}
+        
           <TextField
             control={form.control}
             name="name"
             label="Nom de la classe thérapeutique"
             placeholder="Nom de la classe thérapeutique"
           />
-
+          <TextField
+            control={form.control}
+            name="code"
+            label="Code (2 chiffres)"
+            placeholder="01"
+            maxLength={2}
+          />
+          
           <TextAreaField
             control={form.control}
             name="description"
             label="Description (Optionnelle)"
             placeholder="Description de la classe thérapeutique"
           />
-
+          
           <div className="flex justify-end gap-2 mt-10">
             <Button
               type="button"

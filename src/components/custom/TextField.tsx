@@ -9,20 +9,25 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+export interface TextFieldProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<any>;
+  name: string;
+  label: string;
+  placeholder?: string;
+  disabled?: boolean;
+  // Forward any native <input> prop, e.g. maxLength
+  maxLength?: number;
+}
+
 export default function TextField({
   control,
   name,
   label,
   placeholder,
   disabled,
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control: Control<any>;
-  name: string;
-  label: string;
-  placeholder: string;
-  disabled?: boolean;
-}) {
+  maxLength,
+}: TextFieldProps) {
   return (
     <FormField
       control={control}

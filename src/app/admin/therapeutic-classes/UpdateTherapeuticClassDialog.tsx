@@ -1,7 +1,4 @@
-// Complete this component
-
 "use client";
-
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import CustomDialog from "@/components/custom/CustomDialog";
@@ -16,7 +13,12 @@ import { toast } from "sonner";
 import { updateTherapeuticClass } from "@/lib/services";
 import { TherapeuticClass } from "@/generated/prisma";
 
+// Updated schema to include code
 const updateTherapeuticClassSchema = z.object({
+  code: z.string()
+    .min(2, "Le code doit contenir 2 chiffres")
+    .max(2, "Le code doit contenir 2 chiffres")
+    .regex(/^\d{2}$/, "Le code doit contenir uniquement 2 chiffres"),
   name: z.string().min(1, "Le nom de la classe thérapeutique est obligatoire"),
   description: z.string().optional(),
   isActive: z.boolean(),
@@ -48,6 +50,7 @@ export function UpdateTherapeuticClassDialog({
   const form = useForm<UpdateTherapeuticClassInput>({
     resolver: zodResolver(updateTherapeuticClassSchema),
     defaultValues: {
+      code: therapeuticClassData.code,
       name: therapeuticClassData.name,
       description: therapeuticClassData.description || undefined,
       isActive: therapeuticClassData.isActive,
@@ -62,6 +65,7 @@ export function UpdateTherapeuticClassDialog({
 
   const resetForm = () => {
     form.reset({
+      code: therapeuticClassData.code,
       name: therapeuticClassData.name,
       description: therapeuticClassData.description || undefined,
       isActive: therapeuticClassData.isActive,
@@ -103,11 +107,20 @@ export function UpdateTherapeuticClassDialog({
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+       
+         
           <TextField
             control={form.control}
             name="name"
             label="Nom de la classe thérapeutique"
             placeholder="Nom de la classe thérapeutique"
+          />
+           <TextField
+            control={form.control}
+            name="code"
+            label="Code (2 chiffres)"
+            placeholder="01"
+            maxLength={2}
           />
 
           <TextAreaField

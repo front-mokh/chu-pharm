@@ -29,6 +29,8 @@ export default function SuppliersTable({
             <TableHead>Contact</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Téléphone</TableHead>
+            <TableHead>NIF</TableHead>
+            <TableHead>RC</TableHead>
             <TableHead>Adresse</TableHead>
             <TableHead>Statut</TableHead>
             <TableHead>Date de création</TableHead>
@@ -52,6 +54,8 @@ export default function SuppliersTable({
               <TableCell>{supplier.contactName || "/"}</TableCell>
               <TableCell>{supplier.email || "/"}</TableCell>
               <TableCell>{supplier.phone || "/"}</TableCell>
+              <TableCell>{supplier.nif || "/"}</TableCell>
+              <TableCell>{supplier.rc || "/"}</TableCell>
               <TableCell>{supplier.address || "/"}</TableCell>
               <TableCell>{supplier.isActive ? "Actif" : "Inactif"}</TableCell>
               <TableCell>{formatDate(supplier.createdAt)}</TableCell>

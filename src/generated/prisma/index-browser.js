@@ -146,6 +146,8 @@ exports.Prisma.SupplierScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   address: 'address',
+  nif: 'nif',
+  rc: 'rc',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -153,6 +155,7 @@ exports.Prisma.SupplierScalarFieldEnum = {
 
 exports.Prisma.TherapeuticClassScalarFieldEnum = {
   id: 'id',
+  code: 'code',
   name: 'name',
   description: 'description',
   isActive: 'isActive',
@@ -160,9 +163,21 @@ exports.Prisma.TherapeuticClassScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SubClassScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  therapeuticClassId: 'therapeuticClassId'
+};
+
 exports.Prisma.MedicationScalarFieldEnum = {
   id: 'id',
   dci: 'dci',
+  codedci: 'codedci',
   commercialName: 'commercialName',
   form: 'form',
   dosage: 'dosage',
@@ -172,7 +187,8 @@ exports.Prisma.MedicationScalarFieldEnum = {
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  therapeuticClassId: 'therapeuticClassId'
+  therapeuticClassId: 'therapeuticClassId',
+  subClassId: 'subClassId'
 };
 
 exports.Prisma.MedicationBatchScalarFieldEnum = {
@@ -350,6 +366,7 @@ exports.Prisma.ModelName = {
   Service: 'Service',
   Supplier: 'Supplier',
   TherapeuticClass: 'TherapeuticClass',
+  SubClass: 'SubClass',
   Medication: 'Medication',
   MedicationBatch: 'MedicationBatch',
   StockEntry: 'StockEntry',

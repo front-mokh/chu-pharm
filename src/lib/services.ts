@@ -46,6 +46,8 @@ export type CreateSupplierInput = {
   email?: string;
   phone?: string;
   address?: string;
+  nif?: string; 
+  rc?: string; 
   isActive: boolean;
 };
 
@@ -55,22 +57,42 @@ export type UpdateSupplierInput = {
   email?: string;
   phone?: string;
   address?: string;
+  nif?: string; 
+  rc?: string;  
   isActive: boolean;
-};
+}
 
 // Types for Therapeutic Class inputs
 export type CreateTherapeuticClassInput = {
+  code: string; // Added code field
   name: string;
   description?: string;
   isActive: boolean;
 };
 
 export type UpdateTherapeuticClassInput = {
+  code: string; // Added code field
   name: string;
   description?: string;
   isActive: boolean;
 };
 
+// Types for SubClass inputs
+export type CreateSubClassInput = {
+  code: string; // One letter code
+  name: string;
+  description?: string;
+  isActive: boolean;
+  therapeuticClassId: string;
+};
+
+export type UpdateSubClassInput = {
+  code: string;
+  name: string;
+  description?: string;
+  isActive: boolean;
+  therapeuticClassId: string;
+};
 // Get the current session or throw an error
 async function getSessionOrThrow() {
   const session = await auth();
@@ -467,6 +489,62 @@ export async function getAllTherapeuticClasses() {
     return therapeuticClasses;
   } catch (error) {
     console.error("Error fetching therapeutic classes:", error);
+    throw error;
+  }
+}
+export async function createSubClass(data: CreateSubClassInput) {
+  try {
+    await getSessionOrThrow();
+    const subClass = await prisma.subClass.create({ data });
+    revalidatePath("/admin/subclasses");
+    return { success: true, data: subClass };
+  } catch (error) {
+    console.error("Error creating SubClass:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Une erreur s'est produite" };
+  }
+}
+
+export async function updateSubClass(id: string, data: UpdateSubClassInput) {
+  try {
+    await getSessionOrThrow();
+    const subClass = await prisma.subClass.update({ where: { id }, data });
+    revalidatePath("/admin/subclasses");
+    return { success: true, data: subClass };
+  } catch (error) {
+    console.error("Error updating SubClass:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Une erreur s'est produite" };
+  }
+}
+
+export async function deleteSubClass(id: string) {
+  try {
+    await getSessionOrThrow();
+    const subClass = await prisma.subClass.delete({ where: { id } });
+    revalidatePath("/admin/subclasses");
+    return { success: true, data: subClass };
+  } catch (error) {
+    console.error("Error deleting SubClass:", error);
+    return { success: false, error: error instanceof Error ? error.message : "Une erreur s'est produite" };
+  }
+}
+
+export async function getAllSubClasses() {
+  try {
+    await getSessionOrThrow();
+    const subClasses = await prisma.subClass.findMany({ orderBy: { name: 'asc' } });
+    return subClasses;
+  } catch (error) {
+    console.error("Error fetching SubClasses:", error);
+    throw error;
+  }
+}
+
+export async function getSubClassById(id: string) {
+  try {
+    await getSessionOrThrow();
+    return await prisma.subClass.findUnique({ where: { id } });
+  } catch (error) {
+    console.error("Error fetching SubClass:", error);
     throw error;
   }
 }

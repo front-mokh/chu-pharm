@@ -2,6 +2,8 @@
 
 import * as React from "react";
 import {
+  Folders,
+  GalleryHorizontalEnd,
   LucideIcon,
   UsersRound,
   Contact,
@@ -63,6 +65,16 @@ export function AppSidebar({
           url: "/admin/suppliers",
           icon: Contact,
         },
+        {
+          title: "Classes Thérapeutiques",
+          url: "/admin/therapeutic-classes",
+          icon: Folders,
+        },
+        {
+          title: "Sous classes",
+          url: "/admin/subclasses",
+          icon: GalleryHorizontalEnd,
+        },
       ];
       break;
     case "PHARMACIST":
@@ -81,7 +93,6 @@ export function AppSidebar({
             {
               title: "En Attente de Validation",
               url: "/pharmacist/orders/pending",
-              icon: Inbox,
             },
           ],
         },

@@ -34,6 +34,11 @@ export type Supplier = $Result.DefaultSelection<Prisma.$SupplierPayload>
  */
 export type TherapeuticClass = $Result.DefaultSelection<Prisma.$TherapeuticClassPayload>
 /**
+ * Model SubClass
+ * 
+ */
+export type SubClass = $Result.DefaultSelection<Prisma.$SubClassPayload>
+/**
  * Model Medication
  * 
  */
@@ -366,6 +371,16 @@ export class PrismaClient<
     * ```
     */
   get therapeuticClass(): Prisma.TherapeuticClassDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.subClass`: Exposes CRUD operations for the **SubClass** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SubClasses
+    * const subClasses = await prisma.subClass.findMany()
+    * ```
+    */
+  get subClass(): Prisma.SubClassDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.medication`: Exposes CRUD operations for the **Medication** model.
@@ -890,6 +905,7 @@ export namespace Prisma {
     Service: 'Service',
     Supplier: 'Supplier',
     TherapeuticClass: 'TherapeuticClass',
+    SubClass: 'SubClass',
     Medication: 'Medication',
     MedicationBatch: 'MedicationBatch',
     StockEntry: 'StockEntry',
@@ -916,7 +932,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "service" | "supplier" | "therapeuticClass" | "medication" | "medicationBatch" | "stockEntry" | "stockExit" | "order" | "orderItem" | "deliveryNote" | "alert"
+      modelProps: "user" | "service" | "supplier" | "therapeuticClass" | "subClass" | "medication" | "medicationBatch" | "stockEntry" | "stockExit" | "order" | "orderItem" | "deliveryNote" | "alert"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1213,6 +1229,80 @@ export namespace Prisma {
           count: {
             args: Prisma.TherapeuticClassCountArgs<ExtArgs>
             result: $Utils.Optional<TherapeuticClassCountAggregateOutputType> | number
+          }
+        }
+      }
+      SubClass: {
+        payload: Prisma.$SubClassPayload<ExtArgs>
+        fields: Prisma.SubClassFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SubClassFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubClassPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SubClassFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubClassPayload>
+          }
+          findFirst: {
+            args: Prisma.SubClassFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubClassPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SubClassFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubClassPayload>
+          }
+          findMany: {
+            args: Prisma.SubClassFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubClassPayload>[]
+          }
+          create: {
+            args: Prisma.SubClassCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubClassPayload>
+          }
+          createMany: {
+            args: Prisma.SubClassCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SubClassCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubClassPayload>[]
+          }
+          delete: {
+            args: Prisma.SubClassDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubClassPayload>
+          }
+          update: {
+            args: Prisma.SubClassUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubClassPayload>
+          }
+          deleteMany: {
+            args: Prisma.SubClassDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SubClassUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SubClassUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubClassPayload>[]
+          }
+          upsert: {
+            args: Prisma.SubClassUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SubClassPayload>
+          }
+          aggregate: {
+            args: Prisma.SubClassAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSubClass>
+          }
+          groupBy: {
+            args: Prisma.SubClassGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SubClassGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SubClassCountArgs<ExtArgs>
+            result: $Utils.Optional<SubClassCountAggregateOutputType> | number
           }
         }
       }
@@ -1896,6 +1986,7 @@ export namespace Prisma {
     service?: ServiceOmit
     supplier?: SupplierOmit
     therapeuticClass?: TherapeuticClassOmit
+    subClass?: SubClassOmit
     medication?: MedicationOmit
     medicationBatch?: MedicationBatchOmit
     stockEntry?: StockEntryOmit
@@ -2119,10 +2210,12 @@ export namespace Prisma {
 
   export type TherapeuticClassCountOutputType = {
     medications: number
+    subClasses: number
   }
 
   export type TherapeuticClassCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     medications?: boolean | TherapeuticClassCountOutputTypeCountMedicationsArgs
+    subClasses?: boolean | TherapeuticClassCountOutputTypeCountSubClassesArgs
   }
 
   // Custom InputTypes
@@ -2140,6 +2233,44 @@ export namespace Prisma {
    * TherapeuticClassCountOutputType without action
    */
   export type TherapeuticClassCountOutputTypeCountMedicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MedicationWhereInput
+  }
+
+  /**
+   * TherapeuticClassCountOutputType without action
+   */
+  export type TherapeuticClassCountOutputTypeCountSubClassesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SubClassWhereInput
+  }
+
+
+  /**
+   * Count Type SubClassCountOutputType
+   */
+
+  export type SubClassCountOutputType = {
+    medications: number
+  }
+
+  export type SubClassCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    medications?: boolean | SubClassCountOutputTypeCountMedicationsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SubClassCountOutputType without action
+   */
+  export type SubClassCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClassCountOutputType
+     */
+    select?: SubClassCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SubClassCountOutputType without action
+   */
+  export type SubClassCountOutputTypeCountMedicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MedicationWhereInput
   }
 
@@ -4646,6 +4777,8 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     address: string | null
+    nif: string | null
+    rc: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4658,6 +4791,8 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     address: string | null
+    nif: string | null
+    rc: string | null
     isActive: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4670,6 +4805,8 @@ export namespace Prisma {
     email: number
     phone: number
     address: number
+    nif: number
+    rc: number
     isActive: number
     createdAt: number
     updatedAt: number
@@ -4684,6 +4821,8 @@ export namespace Prisma {
     email?: true
     phone?: true
     address?: true
+    nif?: true
+    rc?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -4696,6 +4835,8 @@ export namespace Prisma {
     email?: true
     phone?: true
     address?: true
+    nif?: true
+    rc?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -4708,6 +4849,8 @@ export namespace Prisma {
     email?: true
     phone?: true
     address?: true
+    nif?: true
+    rc?: true
     isActive?: true
     createdAt?: true
     updatedAt?: true
@@ -4793,6 +4936,8 @@ export namespace Prisma {
     email: string | null
     phone: string | null
     address: string | null
+    nif: string
+    rc: string
     isActive: boolean
     createdAt: Date
     updatedAt: Date
@@ -4822,6 +4967,8 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     address?: boolean
+    nif?: boolean
+    rc?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4836,6 +4983,8 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     address?: boolean
+    nif?: boolean
+    rc?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4848,6 +4997,8 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     address?: boolean
+    nif?: boolean
+    rc?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4860,12 +5011,14 @@ export namespace Prisma {
     email?: boolean
     phone?: boolean
     address?: boolean
+    nif?: boolean
+    rc?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SupplierOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "contactName" | "email" | "phone" | "address" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["supplier"]>
+  export type SupplierOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "contactName" | "email" | "phone" | "address" | "nif" | "rc" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["supplier"]>
   export type SupplierInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     stockEntries?: boolean | Supplier$stockEntriesArgs<ExtArgs>
     _count?: boolean | SupplierCountOutputTypeDefaultArgs<ExtArgs>
@@ -4885,6 +5038,8 @@ export namespace Prisma {
       email: string | null
       phone: string | null
       address: string | null
+      nif: string
+      rc: string
       isActive: boolean
       createdAt: Date
       updatedAt: Date
@@ -5318,6 +5473,8 @@ export namespace Prisma {
     readonly email: FieldRef<"Supplier", 'String'>
     readonly phone: FieldRef<"Supplier", 'String'>
     readonly address: FieldRef<"Supplier", 'String'>
+    readonly nif: FieldRef<"Supplier", 'String'>
+    readonly rc: FieldRef<"Supplier", 'String'>
     readonly isActive: FieldRef<"Supplier", 'Boolean'>
     readonly createdAt: FieldRef<"Supplier", 'DateTime'>
     readonly updatedAt: FieldRef<"Supplier", 'DateTime'>
@@ -5763,6 +5920,7 @@ export namespace Prisma {
 
   export type TherapeuticClassMinAggregateOutputType = {
     id: string | null
+    code: string | null
     name: string | null
     description: string | null
     isActive: boolean | null
@@ -5772,6 +5930,7 @@ export namespace Prisma {
 
   export type TherapeuticClassMaxAggregateOutputType = {
     id: string | null
+    code: string | null
     name: string | null
     description: string | null
     isActive: boolean | null
@@ -5781,6 +5940,7 @@ export namespace Prisma {
 
   export type TherapeuticClassCountAggregateOutputType = {
     id: number
+    code: number
     name: number
     description: number
     isActive: number
@@ -5792,6 +5952,7 @@ export namespace Prisma {
 
   export type TherapeuticClassMinAggregateInputType = {
     id?: true
+    code?: true
     name?: true
     description?: true
     isActive?: true
@@ -5801,6 +5962,7 @@ export namespace Prisma {
 
   export type TherapeuticClassMaxAggregateInputType = {
     id?: true
+    code?: true
     name?: true
     description?: true
     isActive?: true
@@ -5810,6 +5972,7 @@ export namespace Prisma {
 
   export type TherapeuticClassCountAggregateInputType = {
     id?: true
+    code?: true
     name?: true
     description?: true
     isActive?: true
@@ -5892,6 +6055,7 @@ export namespace Prisma {
 
   export type TherapeuticClassGroupByOutputType = {
     id: string
+    code: string
     name: string
     description: string | null
     isActive: boolean
@@ -5918,17 +6082,20 @@ export namespace Prisma {
 
   export type TherapeuticClassSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    code?: boolean
     name?: boolean
     description?: boolean
     isActive?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     medications?: boolean | TherapeuticClass$medicationsArgs<ExtArgs>
+    subClasses?: boolean | TherapeuticClass$subClassesArgs<ExtArgs>
     _count?: boolean | TherapeuticClassCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["therapeuticClass"]>
 
   export type TherapeuticClassSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    code?: boolean
     name?: boolean
     description?: boolean
     isActive?: boolean
@@ -5938,6 +6105,7 @@ export namespace Prisma {
 
   export type TherapeuticClassSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    code?: boolean
     name?: boolean
     description?: boolean
     isActive?: boolean
@@ -5947,6 +6115,7 @@ export namespace Prisma {
 
   export type TherapeuticClassSelectScalar = {
     id?: boolean
+    code?: boolean
     name?: boolean
     description?: boolean
     isActive?: boolean
@@ -5954,9 +6123,10 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type TherapeuticClassOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["therapeuticClass"]>
+  export type TherapeuticClassOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["therapeuticClass"]>
   export type TherapeuticClassInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     medications?: boolean | TherapeuticClass$medicationsArgs<ExtArgs>
+    subClasses?: boolean | TherapeuticClass$subClassesArgs<ExtArgs>
     _count?: boolean | TherapeuticClassCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type TherapeuticClassIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -5966,9 +6136,11 @@ export namespace Prisma {
     name: "TherapeuticClass"
     objects: {
       medications: Prisma.$MedicationPayload<ExtArgs>[]
+      subClasses: Prisma.$SubClassPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      code: string
       name: string
       description: string | null
       isActive: boolean
@@ -6369,6 +6541,7 @@ export namespace Prisma {
   export interface Prisma__TherapeuticClassClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     medications<T extends TherapeuticClass$medicationsArgs<ExtArgs> = {}>(args?: Subset<T, TherapeuticClass$medicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    subClasses<T extends TherapeuticClass$subClassesArgs<ExtArgs> = {}>(args?: Subset<T, TherapeuticClass$subClassesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6399,6 +6572,7 @@ export namespace Prisma {
    */
   interface TherapeuticClassFieldRefs {
     readonly id: FieldRef<"TherapeuticClass", 'String'>
+    readonly code: FieldRef<"TherapeuticClass", 'String'>
     readonly name: FieldRef<"TherapeuticClass", 'String'>
     readonly description: FieldRef<"TherapeuticClass", 'String'>
     readonly isActive: FieldRef<"TherapeuticClass", 'Boolean'>
@@ -6816,6 +6990,30 @@ export namespace Prisma {
   }
 
   /**
+   * TherapeuticClass.subClasses
+   */
+  export type TherapeuticClass$subClassesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
+    where?: SubClassWhereInput
+    orderBy?: SubClassOrderByWithRelationInput | SubClassOrderByWithRelationInput[]
+    cursor?: SubClassWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SubClassScalarFieldEnum | SubClassScalarFieldEnum[]
+  }
+
+  /**
    * TherapeuticClass without action
    */
   export type TherapeuticClassDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6831,6 +7029,1133 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: TherapeuticClassInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SubClass
+   */
+
+  export type AggregateSubClass = {
+    _count: SubClassCountAggregateOutputType | null
+    _min: SubClassMinAggregateOutputType | null
+    _max: SubClassMaxAggregateOutputType | null
+  }
+
+  export type SubClassMinAggregateOutputType = {
+    id: string | null
+    code: string | null
+    name: string | null
+    description: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    therapeuticClassId: string | null
+  }
+
+  export type SubClassMaxAggregateOutputType = {
+    id: string | null
+    code: string | null
+    name: string | null
+    description: string | null
+    isActive: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    therapeuticClassId: string | null
+  }
+
+  export type SubClassCountAggregateOutputType = {
+    id: number
+    code: number
+    name: number
+    description: number
+    isActive: number
+    createdAt: number
+    updatedAt: number
+    therapeuticClassId: number
+    _all: number
+  }
+
+
+  export type SubClassMinAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    therapeuticClassId?: true
+  }
+
+  export type SubClassMaxAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    therapeuticClassId?: true
+  }
+
+  export type SubClassCountAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    description?: true
+    isActive?: true
+    createdAt?: true
+    updatedAt?: true
+    therapeuticClassId?: true
+    _all?: true
+  }
+
+  export type SubClassAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SubClass to aggregate.
+     */
+    where?: SubClassWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SubClasses to fetch.
+     */
+    orderBy?: SubClassOrderByWithRelationInput | SubClassOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SubClassWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SubClasses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SubClasses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SubClasses
+    **/
+    _count?: true | SubClassCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SubClassMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SubClassMaxAggregateInputType
+  }
+
+  export type GetSubClassAggregateType<T extends SubClassAggregateArgs> = {
+        [P in keyof T & keyof AggregateSubClass]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSubClass[P]>
+      : GetScalarType<T[P], AggregateSubClass[P]>
+  }
+
+
+
+
+  export type SubClassGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SubClassWhereInput
+    orderBy?: SubClassOrderByWithAggregationInput | SubClassOrderByWithAggregationInput[]
+    by: SubClassScalarFieldEnum[] | SubClassScalarFieldEnum
+    having?: SubClassScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SubClassCountAggregateInputType | true
+    _min?: SubClassMinAggregateInputType
+    _max?: SubClassMaxAggregateInputType
+  }
+
+  export type SubClassGroupByOutputType = {
+    id: string
+    code: string
+    name: string
+    description: string | null
+    isActive: boolean
+    createdAt: Date
+    updatedAt: Date
+    therapeuticClassId: string
+    _count: SubClassCountAggregateOutputType | null
+    _min: SubClassMinAggregateOutputType | null
+    _max: SubClassMaxAggregateOutputType | null
+  }
+
+  type GetSubClassGroupByPayload<T extends SubClassGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SubClassGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SubClassGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SubClassGroupByOutputType[P]>
+            : GetScalarType<T[P], SubClassGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SubClassSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    therapeuticClassId?: boolean
+    therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+    medications?: boolean | SubClass$medicationsArgs<ExtArgs>
+    _count?: boolean | SubClassCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["subClass"]>
+
+  export type SubClassSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    therapeuticClassId?: boolean
+    therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["subClass"]>
+
+  export type SubClassSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    therapeuticClassId?: boolean
+    therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["subClass"]>
+
+  export type SubClassSelectScalar = {
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    isActive?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    therapeuticClassId?: boolean
+  }
+
+  export type SubClassOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "code" | "name" | "description" | "isActive" | "createdAt" | "updatedAt" | "therapeuticClassId", ExtArgs["result"]["subClass"]>
+  export type SubClassInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+    medications?: boolean | SubClass$medicationsArgs<ExtArgs>
+    _count?: boolean | SubClassCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type SubClassIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+  }
+  export type SubClassIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+  }
+
+  export type $SubClassPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SubClass"
+    objects: {
+      therapeuticClass: Prisma.$TherapeuticClassPayload<ExtArgs>
+      medications: Prisma.$MedicationPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      code: string
+      name: string
+      description: string | null
+      isActive: boolean
+      createdAt: Date
+      updatedAt: Date
+      therapeuticClassId: string
+    }, ExtArgs["result"]["subClass"]>
+    composites: {}
+  }
+
+  type SubClassGetPayload<S extends boolean | null | undefined | SubClassDefaultArgs> = $Result.GetResult<Prisma.$SubClassPayload, S>
+
+  type SubClassCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SubClassFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SubClassCountAggregateInputType | true
+    }
+
+  export interface SubClassDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SubClass'], meta: { name: 'SubClass' } }
+    /**
+     * Find zero or one SubClass that matches the filter.
+     * @param {SubClassFindUniqueArgs} args - Arguments to find a SubClass
+     * @example
+     * // Get one SubClass
+     * const subClass = await prisma.subClass.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SubClassFindUniqueArgs>(args: SelectSubset<T, SubClassFindUniqueArgs<ExtArgs>>): Prisma__SubClassClient<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SubClass that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SubClassFindUniqueOrThrowArgs} args - Arguments to find a SubClass
+     * @example
+     * // Get one SubClass
+     * const subClass = await prisma.subClass.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SubClassFindUniqueOrThrowArgs>(args: SelectSubset<T, SubClassFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SubClassClient<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SubClass that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubClassFindFirstArgs} args - Arguments to find a SubClass
+     * @example
+     * // Get one SubClass
+     * const subClass = await prisma.subClass.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SubClassFindFirstArgs>(args?: SelectSubset<T, SubClassFindFirstArgs<ExtArgs>>): Prisma__SubClassClient<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SubClass that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubClassFindFirstOrThrowArgs} args - Arguments to find a SubClass
+     * @example
+     * // Get one SubClass
+     * const subClass = await prisma.subClass.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SubClassFindFirstOrThrowArgs>(args?: SelectSubset<T, SubClassFindFirstOrThrowArgs<ExtArgs>>): Prisma__SubClassClient<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SubClasses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubClassFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SubClasses
+     * const subClasses = await prisma.subClass.findMany()
+     * 
+     * // Get first 10 SubClasses
+     * const subClasses = await prisma.subClass.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const subClassWithIdOnly = await prisma.subClass.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SubClassFindManyArgs>(args?: SelectSubset<T, SubClassFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SubClass.
+     * @param {SubClassCreateArgs} args - Arguments to create a SubClass.
+     * @example
+     * // Create one SubClass
+     * const SubClass = await prisma.subClass.create({
+     *   data: {
+     *     // ... data to create a SubClass
+     *   }
+     * })
+     * 
+     */
+    create<T extends SubClassCreateArgs>(args: SelectSubset<T, SubClassCreateArgs<ExtArgs>>): Prisma__SubClassClient<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SubClasses.
+     * @param {SubClassCreateManyArgs} args - Arguments to create many SubClasses.
+     * @example
+     * // Create many SubClasses
+     * const subClass = await prisma.subClass.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SubClassCreateManyArgs>(args?: SelectSubset<T, SubClassCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SubClasses and returns the data saved in the database.
+     * @param {SubClassCreateManyAndReturnArgs} args - Arguments to create many SubClasses.
+     * @example
+     * // Create many SubClasses
+     * const subClass = await prisma.subClass.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SubClasses and only return the `id`
+     * const subClassWithIdOnly = await prisma.subClass.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SubClassCreateManyAndReturnArgs>(args?: SelectSubset<T, SubClassCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SubClass.
+     * @param {SubClassDeleteArgs} args - Arguments to delete one SubClass.
+     * @example
+     * // Delete one SubClass
+     * const SubClass = await prisma.subClass.delete({
+     *   where: {
+     *     // ... filter to delete one SubClass
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SubClassDeleteArgs>(args: SelectSubset<T, SubClassDeleteArgs<ExtArgs>>): Prisma__SubClassClient<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SubClass.
+     * @param {SubClassUpdateArgs} args - Arguments to update one SubClass.
+     * @example
+     * // Update one SubClass
+     * const subClass = await prisma.subClass.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SubClassUpdateArgs>(args: SelectSubset<T, SubClassUpdateArgs<ExtArgs>>): Prisma__SubClassClient<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SubClasses.
+     * @param {SubClassDeleteManyArgs} args - Arguments to filter SubClasses to delete.
+     * @example
+     * // Delete a few SubClasses
+     * const { count } = await prisma.subClass.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SubClassDeleteManyArgs>(args?: SelectSubset<T, SubClassDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SubClasses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubClassUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SubClasses
+     * const subClass = await prisma.subClass.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SubClassUpdateManyArgs>(args: SelectSubset<T, SubClassUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SubClasses and returns the data updated in the database.
+     * @param {SubClassUpdateManyAndReturnArgs} args - Arguments to update many SubClasses.
+     * @example
+     * // Update many SubClasses
+     * const subClass = await prisma.subClass.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SubClasses and only return the `id`
+     * const subClassWithIdOnly = await prisma.subClass.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SubClassUpdateManyAndReturnArgs>(args: SelectSubset<T, SubClassUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SubClass.
+     * @param {SubClassUpsertArgs} args - Arguments to update or create a SubClass.
+     * @example
+     * // Update or create a SubClass
+     * const subClass = await prisma.subClass.upsert({
+     *   create: {
+     *     // ... data to create a SubClass
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SubClass we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SubClassUpsertArgs>(args: SelectSubset<T, SubClassUpsertArgs<ExtArgs>>): Prisma__SubClassClient<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SubClasses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubClassCountArgs} args - Arguments to filter SubClasses to count.
+     * @example
+     * // Count the number of SubClasses
+     * const count = await prisma.subClass.count({
+     *   where: {
+     *     // ... the filter for the SubClasses we want to count
+     *   }
+     * })
+    **/
+    count<T extends SubClassCountArgs>(
+      args?: Subset<T, SubClassCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SubClassCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SubClass.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubClassAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SubClassAggregateArgs>(args: Subset<T, SubClassAggregateArgs>): Prisma.PrismaPromise<GetSubClassAggregateType<T>>
+
+    /**
+     * Group by SubClass.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SubClassGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SubClassGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SubClassGroupByArgs['orderBy'] }
+        : { orderBy?: SubClassGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SubClassGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSubClassGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SubClass model
+   */
+  readonly fields: SubClassFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SubClass.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SubClassClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    therapeuticClass<T extends TherapeuticClassDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TherapeuticClassDefaultArgs<ExtArgs>>): Prisma__TherapeuticClassClient<$Result.GetResult<Prisma.$TherapeuticClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    medications<T extends SubClass$medicationsArgs<ExtArgs> = {}>(args?: Subset<T, SubClass$medicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SubClass model
+   */
+  interface SubClassFieldRefs {
+    readonly id: FieldRef<"SubClass", 'String'>
+    readonly code: FieldRef<"SubClass", 'String'>
+    readonly name: FieldRef<"SubClass", 'String'>
+    readonly description: FieldRef<"SubClass", 'String'>
+    readonly isActive: FieldRef<"SubClass", 'Boolean'>
+    readonly createdAt: FieldRef<"SubClass", 'DateTime'>
+    readonly updatedAt: FieldRef<"SubClass", 'DateTime'>
+    readonly therapeuticClassId: FieldRef<"SubClass", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SubClass findUnique
+   */
+  export type SubClassFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
+    /**
+     * Filter, which SubClass to fetch.
+     */
+    where: SubClassWhereUniqueInput
+  }
+
+  /**
+   * SubClass findUniqueOrThrow
+   */
+  export type SubClassFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
+    /**
+     * Filter, which SubClass to fetch.
+     */
+    where: SubClassWhereUniqueInput
+  }
+
+  /**
+   * SubClass findFirst
+   */
+  export type SubClassFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
+    /**
+     * Filter, which SubClass to fetch.
+     */
+    where?: SubClassWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SubClasses to fetch.
+     */
+    orderBy?: SubClassOrderByWithRelationInput | SubClassOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SubClasses.
+     */
+    cursor?: SubClassWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SubClasses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SubClasses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SubClasses.
+     */
+    distinct?: SubClassScalarFieldEnum | SubClassScalarFieldEnum[]
+  }
+
+  /**
+   * SubClass findFirstOrThrow
+   */
+  export type SubClassFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
+    /**
+     * Filter, which SubClass to fetch.
+     */
+    where?: SubClassWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SubClasses to fetch.
+     */
+    orderBy?: SubClassOrderByWithRelationInput | SubClassOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SubClasses.
+     */
+    cursor?: SubClassWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SubClasses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SubClasses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SubClasses.
+     */
+    distinct?: SubClassScalarFieldEnum | SubClassScalarFieldEnum[]
+  }
+
+  /**
+   * SubClass findMany
+   */
+  export type SubClassFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
+    /**
+     * Filter, which SubClasses to fetch.
+     */
+    where?: SubClassWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SubClasses to fetch.
+     */
+    orderBy?: SubClassOrderByWithRelationInput | SubClassOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SubClasses.
+     */
+    cursor?: SubClassWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SubClasses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SubClasses.
+     */
+    skip?: number
+    distinct?: SubClassScalarFieldEnum | SubClassScalarFieldEnum[]
+  }
+
+  /**
+   * SubClass create
+   */
+  export type SubClassCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SubClass.
+     */
+    data: XOR<SubClassCreateInput, SubClassUncheckedCreateInput>
+  }
+
+  /**
+   * SubClass createMany
+   */
+  export type SubClassCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SubClasses.
+     */
+    data: SubClassCreateManyInput | SubClassCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SubClass createManyAndReturn
+   */
+  export type SubClassCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * The data used to create many SubClasses.
+     */
+    data: SubClassCreateManyInput | SubClassCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SubClass update
+   */
+  export type SubClassUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SubClass.
+     */
+    data: XOR<SubClassUpdateInput, SubClassUncheckedUpdateInput>
+    /**
+     * Choose, which SubClass to update.
+     */
+    where: SubClassWhereUniqueInput
+  }
+
+  /**
+   * SubClass updateMany
+   */
+  export type SubClassUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SubClasses.
+     */
+    data: XOR<SubClassUpdateManyMutationInput, SubClassUncheckedUpdateManyInput>
+    /**
+     * Filter which SubClasses to update
+     */
+    where?: SubClassWhereInput
+    /**
+     * Limit how many SubClasses to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SubClass updateManyAndReturn
+   */
+  export type SubClassUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * The data used to update SubClasses.
+     */
+    data: XOR<SubClassUpdateManyMutationInput, SubClassUncheckedUpdateManyInput>
+    /**
+     * Filter which SubClasses to update
+     */
+    where?: SubClassWhereInput
+    /**
+     * Limit how many SubClasses to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SubClass upsert
+   */
+  export type SubClassUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SubClass to update in case it exists.
+     */
+    where: SubClassWhereUniqueInput
+    /**
+     * In case the SubClass found by the `where` argument doesn't exist, create a new SubClass with this data.
+     */
+    create: XOR<SubClassCreateInput, SubClassUncheckedCreateInput>
+    /**
+     * In case the SubClass was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SubClassUpdateInput, SubClassUncheckedUpdateInput>
+  }
+
+  /**
+   * SubClass delete
+   */
+  export type SubClassDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
+    /**
+     * Filter which SubClass to delete.
+     */
+    where: SubClassWhereUniqueInput
+  }
+
+  /**
+   * SubClass deleteMany
+   */
+  export type SubClassDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SubClasses to delete
+     */
+    where?: SubClassWhereInput
+    /**
+     * Limit how many SubClasses to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SubClass.medications
+   */
+  export type SubClass$medicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Medication
+     */
+    select?: MedicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Medication
+     */
+    omit?: MedicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MedicationInclude<ExtArgs> | null
+    where?: MedicationWhereInput
+    orderBy?: MedicationOrderByWithRelationInput | MedicationOrderByWithRelationInput[]
+    cursor?: MedicationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MedicationScalarFieldEnum | MedicationScalarFieldEnum[]
+  }
+
+  /**
+   * SubClass without action
+   */
+  export type SubClassDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
   }
 
 
@@ -6859,6 +8184,7 @@ export namespace Prisma {
   export type MedicationMinAggregateOutputType = {
     id: string | null
     dci: string | null
+    codedci: string | null
     commercialName: string | null
     form: $Enums.MedicationForm | null
     dosage: string | null
@@ -6869,11 +8195,13 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     therapeuticClassId: string | null
+    subClassId: string | null
   }
 
   export type MedicationMaxAggregateOutputType = {
     id: string | null
     dci: string | null
+    codedci: string | null
     commercialName: string | null
     form: $Enums.MedicationForm | null
     dosage: string | null
@@ -6884,11 +8212,13 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     therapeuticClassId: string | null
+    subClassId: string | null
   }
 
   export type MedicationCountAggregateOutputType = {
     id: number
     dci: number
+    codedci: number
     commercialName: number
     form: number
     dosage: number
@@ -6899,6 +8229,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     therapeuticClassId: number
+    subClassId: number
     _all: number
   }
 
@@ -6916,6 +8247,7 @@ export namespace Prisma {
   export type MedicationMinAggregateInputType = {
     id?: true
     dci?: true
+    codedci?: true
     commercialName?: true
     form?: true
     dosage?: true
@@ -6926,11 +8258,13 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     therapeuticClassId?: true
+    subClassId?: true
   }
 
   export type MedicationMaxAggregateInputType = {
     id?: true
     dci?: true
+    codedci?: true
     commercialName?: true
     form?: true
     dosage?: true
@@ -6941,11 +8275,13 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     therapeuticClassId?: true
+    subClassId?: true
   }
 
   export type MedicationCountAggregateInputType = {
     id?: true
     dci?: true
+    codedci?: true
     commercialName?: true
     form?: true
     dosage?: true
@@ -6956,6 +8292,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     therapeuticClassId?: true
+    subClassId?: true
     _all?: true
   }
 
@@ -7048,6 +8385,7 @@ export namespace Prisma {
   export type MedicationGroupByOutputType = {
     id: string
     dci: string
+    codedci: string
     commercialName: string
     form: $Enums.MedicationForm
     dosage: string
@@ -7058,6 +8396,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     therapeuticClassId: string
+    subClassId: string | null
     _count: MedicationCountAggregateOutputType | null
     _avg: MedicationAvgAggregateOutputType | null
     _sum: MedicationSumAggregateOutputType | null
@@ -7082,6 +8421,7 @@ export namespace Prisma {
   export type MedicationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     dci?: boolean
+    codedci?: boolean
     commercialName?: boolean
     form?: boolean
     dosage?: boolean
@@ -7092,7 +8432,9 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     therapeuticClassId?: boolean
+    subClassId?: boolean
     therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+    subClass?: boolean | Medication$subClassArgs<ExtArgs>
     batches?: boolean | Medication$batchesArgs<ExtArgs>
     orderItems?: boolean | Medication$orderItemsArgs<ExtArgs>
     _count?: boolean | MedicationCountOutputTypeDefaultArgs<ExtArgs>
@@ -7101,6 +8443,7 @@ export namespace Prisma {
   export type MedicationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     dci?: boolean
+    codedci?: boolean
     commercialName?: boolean
     form?: boolean
     dosage?: boolean
@@ -7111,12 +8454,15 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     therapeuticClassId?: boolean
+    subClassId?: boolean
     therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+    subClass?: boolean | Medication$subClassArgs<ExtArgs>
   }, ExtArgs["result"]["medication"]>
 
   export type MedicationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     dci?: boolean
+    codedci?: boolean
     commercialName?: boolean
     form?: boolean
     dosage?: boolean
@@ -7127,12 +8473,15 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     therapeuticClassId?: boolean
+    subClassId?: boolean
     therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+    subClass?: boolean | Medication$subClassArgs<ExtArgs>
   }, ExtArgs["result"]["medication"]>
 
   export type MedicationSelectScalar = {
     id?: boolean
     dci?: boolean
+    codedci?: boolean
     commercialName?: boolean
     form?: boolean
     dosage?: boolean
@@ -7143,32 +8492,38 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     therapeuticClassId?: boolean
+    subClassId?: boolean
   }
 
-  export type MedicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dci" | "commercialName" | "form" | "dosage" | "packagingUnit" | "unitsPerPackage" | "minStockLevel" | "isActive" | "createdAt" | "updatedAt" | "therapeuticClassId", ExtArgs["result"]["medication"]>
+  export type MedicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dci" | "codedci" | "commercialName" | "form" | "dosage" | "packagingUnit" | "unitsPerPackage" | "minStockLevel" | "isActive" | "createdAt" | "updatedAt" | "therapeuticClassId" | "subClassId", ExtArgs["result"]["medication"]>
   export type MedicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+    subClass?: boolean | Medication$subClassArgs<ExtArgs>
     batches?: boolean | Medication$batchesArgs<ExtArgs>
     orderItems?: boolean | Medication$orderItemsArgs<ExtArgs>
     _count?: boolean | MedicationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MedicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+    subClass?: boolean | Medication$subClassArgs<ExtArgs>
   }
   export type MedicationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     therapeuticClass?: boolean | TherapeuticClassDefaultArgs<ExtArgs>
+    subClass?: boolean | Medication$subClassArgs<ExtArgs>
   }
 
   export type $MedicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Medication"
     objects: {
       therapeuticClass: Prisma.$TherapeuticClassPayload<ExtArgs>
+      subClass: Prisma.$SubClassPayload<ExtArgs> | null
       batches: Prisma.$MedicationBatchPayload<ExtArgs>[]
       orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       dci: string
+      codedci: string
       commercialName: string
       form: $Enums.MedicationForm
       dosage: string
@@ -7179,6 +8534,7 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       therapeuticClassId: string
+      subClassId: string | null
     }, ExtArgs["result"]["medication"]>
     composites: {}
   }
@@ -7574,6 +8930,7 @@ export namespace Prisma {
   export interface Prisma__MedicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     therapeuticClass<T extends TherapeuticClassDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TherapeuticClassDefaultArgs<ExtArgs>>): Prisma__TherapeuticClassClient<$Result.GetResult<Prisma.$TherapeuticClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    subClass<T extends Medication$subClassArgs<ExtArgs> = {}>(args?: Subset<T, Medication$subClassArgs<ExtArgs>>): Prisma__SubClassClient<$Result.GetResult<Prisma.$SubClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     batches<T extends Medication$batchesArgs<ExtArgs> = {}>(args?: Subset<T, Medication$batchesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MedicationBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     orderItems<T extends Medication$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, Medication$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -7607,6 +8964,7 @@ export namespace Prisma {
   interface MedicationFieldRefs {
     readonly id: FieldRef<"Medication", 'String'>
     readonly dci: FieldRef<"Medication", 'String'>
+    readonly codedci: FieldRef<"Medication", 'String'>
     readonly commercialName: FieldRef<"Medication", 'String'>
     readonly form: FieldRef<"Medication", 'MedicationForm'>
     readonly dosage: FieldRef<"Medication", 'String'>
@@ -7617,6 +8975,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Medication", 'DateTime'>
     readonly updatedAt: FieldRef<"Medication", 'DateTime'>
     readonly therapeuticClassId: FieldRef<"Medication", 'String'>
+    readonly subClassId: FieldRef<"Medication", 'String'>
   }
     
 
@@ -8010,6 +9369,25 @@ export namespace Prisma {
      * Limit how many Medications to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Medication.subClass
+   */
+  export type Medication$subClassArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SubClass
+     */
+    select?: SubClassSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SubClass
+     */
+    omit?: SubClassOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SubClassInclude<ExtArgs> | null
+    where?: SubClassWhereInput
   }
 
   /**
@@ -16207,6 +17585,8 @@ export namespace Prisma {
     email: 'email',
     phone: 'phone',
     address: 'address',
+    nif: 'nif',
+    rc: 'rc',
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -16217,6 +17597,7 @@ export namespace Prisma {
 
   export const TherapeuticClassScalarFieldEnum: {
     id: 'id',
+    code: 'code',
     name: 'name',
     description: 'description',
     isActive: 'isActive',
@@ -16227,9 +17608,24 @@ export namespace Prisma {
   export type TherapeuticClassScalarFieldEnum = (typeof TherapeuticClassScalarFieldEnum)[keyof typeof TherapeuticClassScalarFieldEnum]
 
 
+  export const SubClassScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    name: 'name',
+    description: 'description',
+    isActive: 'isActive',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    therapeuticClassId: 'therapeuticClassId'
+  };
+
+  export type SubClassScalarFieldEnum = (typeof SubClassScalarFieldEnum)[keyof typeof SubClassScalarFieldEnum]
+
+
   export const MedicationScalarFieldEnum: {
     id: 'id',
     dci: 'dci',
+    codedci: 'codedci',
     commercialName: 'commercialName',
     form: 'form',
     dosage: 'dosage',
@@ -16239,7 +17635,8 @@ export namespace Prisma {
     isActive: 'isActive',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    therapeuticClassId: 'therapeuticClassId'
+    therapeuticClassId: 'therapeuticClassId',
+    subClassId: 'subClassId'
   };
 
   export type MedicationScalarFieldEnum = (typeof MedicationScalarFieldEnum)[keyof typeof MedicationScalarFieldEnum]
@@ -16703,6 +18100,8 @@ export namespace Prisma {
     email?: StringNullableFilter<"Supplier"> | string | null
     phone?: StringNullableFilter<"Supplier"> | string | null
     address?: StringNullableFilter<"Supplier"> | string | null
+    nif?: StringFilter<"Supplier"> | string
+    rc?: StringFilter<"Supplier"> | string
     isActive?: BoolFilter<"Supplier"> | boolean
     createdAt?: DateTimeFilter<"Supplier"> | Date | string
     updatedAt?: DateTimeFilter<"Supplier"> | Date | string
@@ -16716,6 +18115,8 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    nif?: SortOrder
+    rc?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16732,6 +18133,8 @@ export namespace Prisma {
     email?: StringNullableFilter<"Supplier"> | string | null
     phone?: StringNullableFilter<"Supplier"> | string | null
     address?: StringNullableFilter<"Supplier"> | string | null
+    nif?: StringFilter<"Supplier"> | string
+    rc?: StringFilter<"Supplier"> | string
     isActive?: BoolFilter<"Supplier"> | boolean
     createdAt?: DateTimeFilter<"Supplier"> | Date | string
     updatedAt?: DateTimeFilter<"Supplier"> | Date | string
@@ -16745,6 +18148,8 @@ export namespace Prisma {
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    nif?: SortOrder
+    rc?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16763,6 +18168,8 @@ export namespace Prisma {
     email?: StringNullableWithAggregatesFilter<"Supplier"> | string | null
     phone?: StringNullableWithAggregatesFilter<"Supplier"> | string | null
     address?: StringNullableWithAggregatesFilter<"Supplier"> | string | null
+    nif?: StringWithAggregatesFilter<"Supplier"> | string
+    rc?: StringWithAggregatesFilter<"Supplier"> | string
     isActive?: BoolWithAggregatesFilter<"Supplier"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Supplier"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Supplier"> | Date | string
@@ -16773,26 +18180,31 @@ export namespace Prisma {
     OR?: TherapeuticClassWhereInput[]
     NOT?: TherapeuticClassWhereInput | TherapeuticClassWhereInput[]
     id?: StringFilter<"TherapeuticClass"> | string
+    code?: StringFilter<"TherapeuticClass"> | string
     name?: StringFilter<"TherapeuticClass"> | string
     description?: StringNullableFilter<"TherapeuticClass"> | string | null
     isActive?: BoolFilter<"TherapeuticClass"> | boolean
     createdAt?: DateTimeFilter<"TherapeuticClass"> | Date | string
     updatedAt?: DateTimeFilter<"TherapeuticClass"> | Date | string
     medications?: MedicationListRelationFilter
+    subClasses?: SubClassListRelationFilter
   }
 
   export type TherapeuticClassOrderByWithRelationInput = {
     id?: SortOrder
+    code?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     medications?: MedicationOrderByRelationAggregateInput
+    subClasses?: SubClassOrderByRelationAggregateInput
   }
 
   export type TherapeuticClassWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    code?: string
     name?: string
     AND?: TherapeuticClassWhereInput | TherapeuticClassWhereInput[]
     OR?: TherapeuticClassWhereInput[]
@@ -16802,10 +18214,12 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"TherapeuticClass"> | Date | string
     updatedAt?: DateTimeFilter<"TherapeuticClass"> | Date | string
     medications?: MedicationListRelationFilter
-  }, "id" | "name">
+    subClasses?: SubClassListRelationFilter
+  }, "id" | "code" | "name">
 
   export type TherapeuticClassOrderByWithAggregationInput = {
     id?: SortOrder
+    code?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
     isActive?: SortOrder
@@ -16821,11 +18235,85 @@ export namespace Prisma {
     OR?: TherapeuticClassScalarWhereWithAggregatesInput[]
     NOT?: TherapeuticClassScalarWhereWithAggregatesInput | TherapeuticClassScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"TherapeuticClass"> | string
+    code?: StringWithAggregatesFilter<"TherapeuticClass"> | string
     name?: StringWithAggregatesFilter<"TherapeuticClass"> | string
     description?: StringNullableWithAggregatesFilter<"TherapeuticClass"> | string | null
     isActive?: BoolWithAggregatesFilter<"TherapeuticClass"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"TherapeuticClass"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"TherapeuticClass"> | Date | string
+  }
+
+  export type SubClassWhereInput = {
+    AND?: SubClassWhereInput | SubClassWhereInput[]
+    OR?: SubClassWhereInput[]
+    NOT?: SubClassWhereInput | SubClassWhereInput[]
+    id?: StringFilter<"SubClass"> | string
+    code?: StringFilter<"SubClass"> | string
+    name?: StringFilter<"SubClass"> | string
+    description?: StringNullableFilter<"SubClass"> | string | null
+    isActive?: BoolFilter<"SubClass"> | boolean
+    createdAt?: DateTimeFilter<"SubClass"> | Date | string
+    updatedAt?: DateTimeFilter<"SubClass"> | Date | string
+    therapeuticClassId?: StringFilter<"SubClass"> | string
+    therapeuticClass?: XOR<TherapeuticClassScalarRelationFilter, TherapeuticClassWhereInput>
+    medications?: MedicationListRelationFilter
+  }
+
+  export type SubClassOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    therapeuticClassId?: SortOrder
+    therapeuticClass?: TherapeuticClassOrderByWithRelationInput
+    medications?: MedicationOrderByRelationAggregateInput
+  }
+
+  export type SubClassWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    name?: string
+    AND?: SubClassWhereInput | SubClassWhereInput[]
+    OR?: SubClassWhereInput[]
+    NOT?: SubClassWhereInput | SubClassWhereInput[]
+    description?: StringNullableFilter<"SubClass"> | string | null
+    isActive?: BoolFilter<"SubClass"> | boolean
+    createdAt?: DateTimeFilter<"SubClass"> | Date | string
+    updatedAt?: DateTimeFilter<"SubClass"> | Date | string
+    therapeuticClassId?: StringFilter<"SubClass"> | string
+    therapeuticClass?: XOR<TherapeuticClassScalarRelationFilter, TherapeuticClassWhereInput>
+    medications?: MedicationListRelationFilter
+  }, "id" | "code" | "name">
+
+  export type SubClassOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    therapeuticClassId?: SortOrder
+    _count?: SubClassCountOrderByAggregateInput
+    _max?: SubClassMaxOrderByAggregateInput
+    _min?: SubClassMinOrderByAggregateInput
+  }
+
+  export type SubClassScalarWhereWithAggregatesInput = {
+    AND?: SubClassScalarWhereWithAggregatesInput | SubClassScalarWhereWithAggregatesInput[]
+    OR?: SubClassScalarWhereWithAggregatesInput[]
+    NOT?: SubClassScalarWhereWithAggregatesInput | SubClassScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SubClass"> | string
+    code?: StringWithAggregatesFilter<"SubClass"> | string
+    name?: StringWithAggregatesFilter<"SubClass"> | string
+    description?: StringNullableWithAggregatesFilter<"SubClass"> | string | null
+    isActive?: BoolWithAggregatesFilter<"SubClass"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"SubClass"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SubClass"> | Date | string
+    therapeuticClassId?: StringWithAggregatesFilter<"SubClass"> | string
   }
 
   export type MedicationWhereInput = {
@@ -16834,6 +18322,7 @@ export namespace Prisma {
     NOT?: MedicationWhereInput | MedicationWhereInput[]
     id?: StringFilter<"Medication"> | string
     dci?: StringFilter<"Medication"> | string
+    codedci?: StringFilter<"Medication"> | string
     commercialName?: StringFilter<"Medication"> | string
     form?: EnumMedicationFormFilter<"Medication"> | $Enums.MedicationForm
     dosage?: StringFilter<"Medication"> | string
@@ -16844,7 +18333,9 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Medication"> | Date | string
     updatedAt?: DateTimeFilter<"Medication"> | Date | string
     therapeuticClassId?: StringFilter<"Medication"> | string
+    subClassId?: StringNullableFilter<"Medication"> | string | null
     therapeuticClass?: XOR<TherapeuticClassScalarRelationFilter, TherapeuticClassWhereInput>
+    subClass?: XOR<SubClassNullableScalarRelationFilter, SubClassWhereInput> | null
     batches?: MedicationBatchListRelationFilter
     orderItems?: OrderItemListRelationFilter
   }
@@ -16852,6 +18343,7 @@ export namespace Prisma {
   export type MedicationOrderByWithRelationInput = {
     id?: SortOrder
     dci?: SortOrder
+    codedci?: SortOrder
     commercialName?: SortOrder
     form?: SortOrder
     dosage?: SortOrder
@@ -16862,13 +18354,16 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     therapeuticClassId?: SortOrder
+    subClassId?: SortOrderInput | SortOrder
     therapeuticClass?: TherapeuticClassOrderByWithRelationInput
+    subClass?: SubClassOrderByWithRelationInput
     batches?: MedicationBatchOrderByRelationAggregateInput
     orderItems?: OrderItemOrderByRelationAggregateInput
   }
 
   export type MedicationWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    codedci?: string
     AND?: MedicationWhereInput | MedicationWhereInput[]
     OR?: MedicationWhereInput[]
     NOT?: MedicationWhereInput | MedicationWhereInput[]
@@ -16883,14 +18378,17 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Medication"> | Date | string
     updatedAt?: DateTimeFilter<"Medication"> | Date | string
     therapeuticClassId?: StringFilter<"Medication"> | string
+    subClassId?: StringNullableFilter<"Medication"> | string | null
     therapeuticClass?: XOR<TherapeuticClassScalarRelationFilter, TherapeuticClassWhereInput>
+    subClass?: XOR<SubClassNullableScalarRelationFilter, SubClassWhereInput> | null
     batches?: MedicationBatchListRelationFilter
     orderItems?: OrderItemListRelationFilter
-  }, "id">
+  }, "id" | "codedci">
 
   export type MedicationOrderByWithAggregationInput = {
     id?: SortOrder
     dci?: SortOrder
+    codedci?: SortOrder
     commercialName?: SortOrder
     form?: SortOrder
     dosage?: SortOrder
@@ -16901,6 +18399,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     therapeuticClassId?: SortOrder
+    subClassId?: SortOrderInput | SortOrder
     _count?: MedicationCountOrderByAggregateInput
     _avg?: MedicationAvgOrderByAggregateInput
     _max?: MedicationMaxOrderByAggregateInput
@@ -16914,6 +18413,7 @@ export namespace Prisma {
     NOT?: MedicationScalarWhereWithAggregatesInput | MedicationScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Medication"> | string
     dci?: StringWithAggregatesFilter<"Medication"> | string
+    codedci?: StringWithAggregatesFilter<"Medication"> | string
     commercialName?: StringWithAggregatesFilter<"Medication"> | string
     form?: EnumMedicationFormWithAggregatesFilter<"Medication"> | $Enums.MedicationForm
     dosage?: StringWithAggregatesFilter<"Medication"> | string
@@ -16924,6 +18424,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Medication"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Medication"> | Date | string
     therapeuticClassId?: StringWithAggregatesFilter<"Medication"> | string
+    subClassId?: StringNullableWithAggregatesFilter<"Medication"> | string | null
   }
 
   export type MedicationBatchWhereInput = {
@@ -17660,6 +19161,8 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     address?: string | null
+    nif: string
+    rc: string
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17673,6 +19176,8 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     address?: string | null
+    nif: string
+    rc: string
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17686,6 +19191,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    nif?: StringFieldUpdateOperationsInput | string
+    rc?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17699,6 +19206,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    nif?: StringFieldUpdateOperationsInput | string
+    rc?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17712,6 +19221,8 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     address?: string | null
+    nif: string
+    rc: string
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17724,6 +19235,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    nif?: StringFieldUpdateOperationsInput | string
+    rc?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17736,6 +19249,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    nif?: StringFieldUpdateOperationsInput | string
+    rc?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17743,46 +19258,55 @@ export namespace Prisma {
 
   export type TherapeuticClassCreateInput = {
     id?: string
+    code: string
     name: string
     description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     medications?: MedicationCreateNestedManyWithoutTherapeuticClassInput
+    subClasses?: SubClassCreateNestedManyWithoutTherapeuticClassInput
   }
 
   export type TherapeuticClassUncheckedCreateInput = {
     id?: string
+    code: string
     name: string
     description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     medications?: MedicationUncheckedCreateNestedManyWithoutTherapeuticClassInput
+    subClasses?: SubClassUncheckedCreateNestedManyWithoutTherapeuticClassInput
   }
 
   export type TherapeuticClassUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     medications?: MedicationUpdateManyWithoutTherapeuticClassNestedInput
+    subClasses?: SubClassUpdateManyWithoutTherapeuticClassNestedInput
   }
 
   export type TherapeuticClassUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     medications?: MedicationUncheckedUpdateManyWithoutTherapeuticClassNestedInput
+    subClasses?: SubClassUncheckedUpdateManyWithoutTherapeuticClassNestedInput
   }
 
   export type TherapeuticClassCreateManyInput = {
     id?: string
+    code: string
     name: string
     description?: string | null
     isActive?: boolean
@@ -17792,6 +19316,7 @@ export namespace Prisma {
 
   export type TherapeuticClassUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -17801,6 +19326,7 @@ export namespace Prisma {
 
   export type TherapeuticClassUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
@@ -17808,9 +19334,90 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SubClassCreateInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    therapeuticClass: TherapeuticClassCreateNestedOneWithoutSubClassesInput
+    medications?: MedicationCreateNestedManyWithoutSubClassInput
+  }
+
+  export type SubClassUncheckedCreateInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    therapeuticClassId: string
+    medications?: MedicationUncheckedCreateNestedManyWithoutSubClassInput
+  }
+
+  export type SubClassUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    therapeuticClass?: TherapeuticClassUpdateOneRequiredWithoutSubClassesNestedInput
+    medications?: MedicationUpdateManyWithoutSubClassNestedInput
+  }
+
+  export type SubClassUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    therapeuticClassId?: StringFieldUpdateOperationsInput | string
+    medications?: MedicationUncheckedUpdateManyWithoutSubClassNestedInput
+  }
+
+  export type SubClassCreateManyInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    therapeuticClassId: string
+  }
+
+  export type SubClassUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SubClassUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    therapeuticClassId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type MedicationCreateInput = {
     id?: string
     dci: string
+    codedci: string
     commercialName: string
     form: $Enums.MedicationForm
     dosage: string
@@ -17821,6 +19428,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     therapeuticClass: TherapeuticClassCreateNestedOneWithoutMedicationsInput
+    subClass?: SubClassCreateNestedOneWithoutMedicationsInput
     batches?: MedicationBatchCreateNestedManyWithoutMedicationInput
     orderItems?: OrderItemCreateNestedManyWithoutMedicationInput
   }
@@ -17828,6 +19436,7 @@ export namespace Prisma {
   export type MedicationUncheckedCreateInput = {
     id?: string
     dci: string
+    codedci: string
     commercialName: string
     form: $Enums.MedicationForm
     dosage: string
@@ -17838,6 +19447,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     therapeuticClassId: string
+    subClassId?: string | null
     batches?: MedicationBatchUncheckedCreateNestedManyWithoutMedicationInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMedicationInput
   }
@@ -17845,6 +19455,7 @@ export namespace Prisma {
   export type MedicationUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
     commercialName?: StringFieldUpdateOperationsInput | string
     form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
     dosage?: StringFieldUpdateOperationsInput | string
@@ -17855,6 +19466,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     therapeuticClass?: TherapeuticClassUpdateOneRequiredWithoutMedicationsNestedInput
+    subClass?: SubClassUpdateOneWithoutMedicationsNestedInput
     batches?: MedicationBatchUpdateManyWithoutMedicationNestedInput
     orderItems?: OrderItemUpdateManyWithoutMedicationNestedInput
   }
@@ -17862,6 +19474,7 @@ export namespace Prisma {
   export type MedicationUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
     commercialName?: StringFieldUpdateOperationsInput | string
     form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
     dosage?: StringFieldUpdateOperationsInput | string
@@ -17872,6 +19485,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     therapeuticClassId?: StringFieldUpdateOperationsInput | string
+    subClassId?: NullableStringFieldUpdateOperationsInput | string | null
     batches?: MedicationBatchUncheckedUpdateManyWithoutMedicationNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutMedicationNestedInput
   }
@@ -17879,6 +19493,7 @@ export namespace Prisma {
   export type MedicationCreateManyInput = {
     id?: string
     dci: string
+    codedci: string
     commercialName: string
     form: $Enums.MedicationForm
     dosage: string
@@ -17889,11 +19504,13 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     therapeuticClassId: string
+    subClassId?: string | null
   }
 
   export type MedicationUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
     commercialName?: StringFieldUpdateOperationsInput | string
     form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
     dosage?: StringFieldUpdateOperationsInput | string
@@ -17908,6 +19525,7 @@ export namespace Prisma {
   export type MedicationUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
     commercialName?: StringFieldUpdateOperationsInput | string
     form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
     dosage?: StringFieldUpdateOperationsInput | string
@@ -17918,6 +19536,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     therapeuticClassId?: StringFieldUpdateOperationsInput | string
+    subClassId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MedicationBatchCreateInput = {
@@ -18736,6 +20355,8 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     address?: SortOrder
+    nif?: SortOrder
+    rc?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18748,6 +20369,8 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     address?: SortOrder
+    nif?: SortOrder
+    rc?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18760,6 +20383,8 @@ export namespace Prisma {
     email?: SortOrder
     phone?: SortOrder
     address?: SortOrder
+    nif?: SortOrder
+    rc?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -18771,12 +20396,23 @@ export namespace Prisma {
     none?: MedicationWhereInput
   }
 
+  export type SubClassListRelationFilter = {
+    every?: SubClassWhereInput
+    some?: SubClassWhereInput
+    none?: SubClassWhereInput
+  }
+
   export type MedicationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SubClassOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type TherapeuticClassCountOrderByAggregateInput = {
     id?: SortOrder
+    code?: SortOrder
     name?: SortOrder
     description?: SortOrder
     isActive?: SortOrder
@@ -18786,6 +20422,7 @@ export namespace Prisma {
 
   export type TherapeuticClassMaxOrderByAggregateInput = {
     id?: SortOrder
+    code?: SortOrder
     name?: SortOrder
     description?: SortOrder
     isActive?: SortOrder
@@ -18795,11 +20432,50 @@ export namespace Prisma {
 
   export type TherapeuticClassMinOrderByAggregateInput = {
     id?: SortOrder
+    code?: SortOrder
     name?: SortOrder
     description?: SortOrder
     isActive?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type TherapeuticClassScalarRelationFilter = {
+    is?: TherapeuticClassWhereInput
+    isNot?: TherapeuticClassWhereInput
+  }
+
+  export type SubClassCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    therapeuticClassId?: SortOrder
+  }
+
+  export type SubClassMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    therapeuticClassId?: SortOrder
+  }
+
+  export type SubClassMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isActive?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    therapeuticClassId?: SortOrder
   }
 
   export type EnumMedicationFormFilter<$PrismaModel = never> = {
@@ -18827,9 +20503,9 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
-  export type TherapeuticClassScalarRelationFilter = {
-    is?: TherapeuticClassWhereInput
-    isNot?: TherapeuticClassWhereInput
+  export type SubClassNullableScalarRelationFilter = {
+    is?: SubClassWhereInput | null
+    isNot?: SubClassWhereInput | null
   }
 
   export type MedicationBatchListRelationFilter = {
@@ -18855,6 +20531,7 @@ export namespace Prisma {
   export type MedicationCountOrderByAggregateInput = {
     id?: SortOrder
     dci?: SortOrder
+    codedci?: SortOrder
     commercialName?: SortOrder
     form?: SortOrder
     dosage?: SortOrder
@@ -18865,6 +20542,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     therapeuticClassId?: SortOrder
+    subClassId?: SortOrder
   }
 
   export type MedicationAvgOrderByAggregateInput = {
@@ -18875,6 +20553,7 @@ export namespace Prisma {
   export type MedicationMaxOrderByAggregateInput = {
     id?: SortOrder
     dci?: SortOrder
+    codedci?: SortOrder
     commercialName?: SortOrder
     form?: SortOrder
     dosage?: SortOrder
@@ -18885,11 +20564,13 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     therapeuticClassId?: SortOrder
+    subClassId?: SortOrder
   }
 
   export type MedicationMinOrderByAggregateInput = {
     id?: SortOrder
     dci?: SortOrder
+    codedci?: SortOrder
     commercialName?: SortOrder
     form?: SortOrder
     dosage?: SortOrder
@@ -18900,6 +20581,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     therapeuticClassId?: SortOrder
+    subClassId?: SortOrder
   }
 
   export type MedicationSumOrderByAggregateInput = {
@@ -19731,11 +21413,25 @@ export namespace Prisma {
     connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
   }
 
+  export type SubClassCreateNestedManyWithoutTherapeuticClassInput = {
+    create?: XOR<SubClassCreateWithoutTherapeuticClassInput, SubClassUncheckedCreateWithoutTherapeuticClassInput> | SubClassCreateWithoutTherapeuticClassInput[] | SubClassUncheckedCreateWithoutTherapeuticClassInput[]
+    connectOrCreate?: SubClassCreateOrConnectWithoutTherapeuticClassInput | SubClassCreateOrConnectWithoutTherapeuticClassInput[]
+    createMany?: SubClassCreateManyTherapeuticClassInputEnvelope
+    connect?: SubClassWhereUniqueInput | SubClassWhereUniqueInput[]
+  }
+
   export type MedicationUncheckedCreateNestedManyWithoutTherapeuticClassInput = {
     create?: XOR<MedicationCreateWithoutTherapeuticClassInput, MedicationUncheckedCreateWithoutTherapeuticClassInput> | MedicationCreateWithoutTherapeuticClassInput[] | MedicationUncheckedCreateWithoutTherapeuticClassInput[]
     connectOrCreate?: MedicationCreateOrConnectWithoutTherapeuticClassInput | MedicationCreateOrConnectWithoutTherapeuticClassInput[]
     createMany?: MedicationCreateManyTherapeuticClassInputEnvelope
     connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+  }
+
+  export type SubClassUncheckedCreateNestedManyWithoutTherapeuticClassInput = {
+    create?: XOR<SubClassCreateWithoutTherapeuticClassInput, SubClassUncheckedCreateWithoutTherapeuticClassInput> | SubClassCreateWithoutTherapeuticClassInput[] | SubClassUncheckedCreateWithoutTherapeuticClassInput[]
+    connectOrCreate?: SubClassCreateOrConnectWithoutTherapeuticClassInput | SubClassCreateOrConnectWithoutTherapeuticClassInput[]
+    createMany?: SubClassCreateManyTherapeuticClassInputEnvelope
+    connect?: SubClassWhereUniqueInput | SubClassWhereUniqueInput[]
   }
 
   export type MedicationUpdateManyWithoutTherapeuticClassNestedInput = {
@@ -19752,6 +21448,20 @@ export namespace Prisma {
     deleteMany?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
   }
 
+  export type SubClassUpdateManyWithoutTherapeuticClassNestedInput = {
+    create?: XOR<SubClassCreateWithoutTherapeuticClassInput, SubClassUncheckedCreateWithoutTherapeuticClassInput> | SubClassCreateWithoutTherapeuticClassInput[] | SubClassUncheckedCreateWithoutTherapeuticClassInput[]
+    connectOrCreate?: SubClassCreateOrConnectWithoutTherapeuticClassInput | SubClassCreateOrConnectWithoutTherapeuticClassInput[]
+    upsert?: SubClassUpsertWithWhereUniqueWithoutTherapeuticClassInput | SubClassUpsertWithWhereUniqueWithoutTherapeuticClassInput[]
+    createMany?: SubClassCreateManyTherapeuticClassInputEnvelope
+    set?: SubClassWhereUniqueInput | SubClassWhereUniqueInput[]
+    disconnect?: SubClassWhereUniqueInput | SubClassWhereUniqueInput[]
+    delete?: SubClassWhereUniqueInput | SubClassWhereUniqueInput[]
+    connect?: SubClassWhereUniqueInput | SubClassWhereUniqueInput[]
+    update?: SubClassUpdateWithWhereUniqueWithoutTherapeuticClassInput | SubClassUpdateWithWhereUniqueWithoutTherapeuticClassInput[]
+    updateMany?: SubClassUpdateManyWithWhereWithoutTherapeuticClassInput | SubClassUpdateManyWithWhereWithoutTherapeuticClassInput[]
+    deleteMany?: SubClassScalarWhereInput | SubClassScalarWhereInput[]
+  }
+
   export type MedicationUncheckedUpdateManyWithoutTherapeuticClassNestedInput = {
     create?: XOR<MedicationCreateWithoutTherapeuticClassInput, MedicationUncheckedCreateWithoutTherapeuticClassInput> | MedicationCreateWithoutTherapeuticClassInput[] | MedicationUncheckedCreateWithoutTherapeuticClassInput[]
     connectOrCreate?: MedicationCreateOrConnectWithoutTherapeuticClassInput | MedicationCreateOrConnectWithoutTherapeuticClassInput[]
@@ -19766,10 +21476,86 @@ export namespace Prisma {
     deleteMany?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
   }
 
+  export type SubClassUncheckedUpdateManyWithoutTherapeuticClassNestedInput = {
+    create?: XOR<SubClassCreateWithoutTherapeuticClassInput, SubClassUncheckedCreateWithoutTherapeuticClassInput> | SubClassCreateWithoutTherapeuticClassInput[] | SubClassUncheckedCreateWithoutTherapeuticClassInput[]
+    connectOrCreate?: SubClassCreateOrConnectWithoutTherapeuticClassInput | SubClassCreateOrConnectWithoutTherapeuticClassInput[]
+    upsert?: SubClassUpsertWithWhereUniqueWithoutTherapeuticClassInput | SubClassUpsertWithWhereUniqueWithoutTherapeuticClassInput[]
+    createMany?: SubClassCreateManyTherapeuticClassInputEnvelope
+    set?: SubClassWhereUniqueInput | SubClassWhereUniqueInput[]
+    disconnect?: SubClassWhereUniqueInput | SubClassWhereUniqueInput[]
+    delete?: SubClassWhereUniqueInput | SubClassWhereUniqueInput[]
+    connect?: SubClassWhereUniqueInput | SubClassWhereUniqueInput[]
+    update?: SubClassUpdateWithWhereUniqueWithoutTherapeuticClassInput | SubClassUpdateWithWhereUniqueWithoutTherapeuticClassInput[]
+    updateMany?: SubClassUpdateManyWithWhereWithoutTherapeuticClassInput | SubClassUpdateManyWithWhereWithoutTherapeuticClassInput[]
+    deleteMany?: SubClassScalarWhereInput | SubClassScalarWhereInput[]
+  }
+
+  export type TherapeuticClassCreateNestedOneWithoutSubClassesInput = {
+    create?: XOR<TherapeuticClassCreateWithoutSubClassesInput, TherapeuticClassUncheckedCreateWithoutSubClassesInput>
+    connectOrCreate?: TherapeuticClassCreateOrConnectWithoutSubClassesInput
+    connect?: TherapeuticClassWhereUniqueInput
+  }
+
+  export type MedicationCreateNestedManyWithoutSubClassInput = {
+    create?: XOR<MedicationCreateWithoutSubClassInput, MedicationUncheckedCreateWithoutSubClassInput> | MedicationCreateWithoutSubClassInput[] | MedicationUncheckedCreateWithoutSubClassInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutSubClassInput | MedicationCreateOrConnectWithoutSubClassInput[]
+    createMany?: MedicationCreateManySubClassInputEnvelope
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+  }
+
+  export type MedicationUncheckedCreateNestedManyWithoutSubClassInput = {
+    create?: XOR<MedicationCreateWithoutSubClassInput, MedicationUncheckedCreateWithoutSubClassInput> | MedicationCreateWithoutSubClassInput[] | MedicationUncheckedCreateWithoutSubClassInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutSubClassInput | MedicationCreateOrConnectWithoutSubClassInput[]
+    createMany?: MedicationCreateManySubClassInputEnvelope
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+  }
+
+  export type TherapeuticClassUpdateOneRequiredWithoutSubClassesNestedInput = {
+    create?: XOR<TherapeuticClassCreateWithoutSubClassesInput, TherapeuticClassUncheckedCreateWithoutSubClassesInput>
+    connectOrCreate?: TherapeuticClassCreateOrConnectWithoutSubClassesInput
+    upsert?: TherapeuticClassUpsertWithoutSubClassesInput
+    connect?: TherapeuticClassWhereUniqueInput
+    update?: XOR<XOR<TherapeuticClassUpdateToOneWithWhereWithoutSubClassesInput, TherapeuticClassUpdateWithoutSubClassesInput>, TherapeuticClassUncheckedUpdateWithoutSubClassesInput>
+  }
+
+  export type MedicationUpdateManyWithoutSubClassNestedInput = {
+    create?: XOR<MedicationCreateWithoutSubClassInput, MedicationUncheckedCreateWithoutSubClassInput> | MedicationCreateWithoutSubClassInput[] | MedicationUncheckedCreateWithoutSubClassInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutSubClassInput | MedicationCreateOrConnectWithoutSubClassInput[]
+    upsert?: MedicationUpsertWithWhereUniqueWithoutSubClassInput | MedicationUpsertWithWhereUniqueWithoutSubClassInput[]
+    createMany?: MedicationCreateManySubClassInputEnvelope
+    set?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    disconnect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    delete?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    update?: MedicationUpdateWithWhereUniqueWithoutSubClassInput | MedicationUpdateWithWhereUniqueWithoutSubClassInput[]
+    updateMany?: MedicationUpdateManyWithWhereWithoutSubClassInput | MedicationUpdateManyWithWhereWithoutSubClassInput[]
+    deleteMany?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
+  }
+
+  export type MedicationUncheckedUpdateManyWithoutSubClassNestedInput = {
+    create?: XOR<MedicationCreateWithoutSubClassInput, MedicationUncheckedCreateWithoutSubClassInput> | MedicationCreateWithoutSubClassInput[] | MedicationUncheckedCreateWithoutSubClassInput[]
+    connectOrCreate?: MedicationCreateOrConnectWithoutSubClassInput | MedicationCreateOrConnectWithoutSubClassInput[]
+    upsert?: MedicationUpsertWithWhereUniqueWithoutSubClassInput | MedicationUpsertWithWhereUniqueWithoutSubClassInput[]
+    createMany?: MedicationCreateManySubClassInputEnvelope
+    set?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    disconnect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    delete?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    connect?: MedicationWhereUniqueInput | MedicationWhereUniqueInput[]
+    update?: MedicationUpdateWithWhereUniqueWithoutSubClassInput | MedicationUpdateWithWhereUniqueWithoutSubClassInput[]
+    updateMany?: MedicationUpdateManyWithWhereWithoutSubClassInput | MedicationUpdateManyWithWhereWithoutSubClassInput[]
+    deleteMany?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
+  }
+
   export type TherapeuticClassCreateNestedOneWithoutMedicationsInput = {
     create?: XOR<TherapeuticClassCreateWithoutMedicationsInput, TherapeuticClassUncheckedCreateWithoutMedicationsInput>
     connectOrCreate?: TherapeuticClassCreateOrConnectWithoutMedicationsInput
     connect?: TherapeuticClassWhereUniqueInput
+  }
+
+  export type SubClassCreateNestedOneWithoutMedicationsInput = {
+    create?: XOR<SubClassCreateWithoutMedicationsInput, SubClassUncheckedCreateWithoutMedicationsInput>
+    connectOrCreate?: SubClassCreateOrConnectWithoutMedicationsInput
+    connect?: SubClassWhereUniqueInput
   }
 
   export type MedicationBatchCreateNestedManyWithoutMedicationInput = {
@@ -19822,6 +21608,16 @@ export namespace Prisma {
     upsert?: TherapeuticClassUpsertWithoutMedicationsInput
     connect?: TherapeuticClassWhereUniqueInput
     update?: XOR<XOR<TherapeuticClassUpdateToOneWithWhereWithoutMedicationsInput, TherapeuticClassUpdateWithoutMedicationsInput>, TherapeuticClassUncheckedUpdateWithoutMedicationsInput>
+  }
+
+  export type SubClassUpdateOneWithoutMedicationsNestedInput = {
+    create?: XOR<SubClassCreateWithoutMedicationsInput, SubClassUncheckedCreateWithoutMedicationsInput>
+    connectOrCreate?: SubClassCreateOrConnectWithoutMedicationsInput
+    upsert?: SubClassUpsertWithoutMedicationsInput
+    disconnect?: SubClassWhereInput | boolean
+    delete?: SubClassWhereInput | boolean
+    connect?: SubClassWhereUniqueInput
+    update?: XOR<XOR<SubClassUpdateToOneWithWhereWithoutMedicationsInput, SubClassUpdateWithoutMedicationsInput>, SubClassUncheckedUpdateWithoutMedicationsInput>
   }
 
   export type MedicationBatchUpdateManyWithoutMedicationNestedInput = {
@@ -21079,6 +22875,7 @@ export namespace Prisma {
   export type MedicationCreateWithoutTherapeuticClassInput = {
     id?: string
     dci: string
+    codedci: string
     commercialName: string
     form: $Enums.MedicationForm
     dosage: string
@@ -21088,6 +22885,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    subClass?: SubClassCreateNestedOneWithoutMedicationsInput
     batches?: MedicationBatchCreateNestedManyWithoutMedicationInput
     orderItems?: OrderItemCreateNestedManyWithoutMedicationInput
   }
@@ -21095,6 +22893,7 @@ export namespace Prisma {
   export type MedicationUncheckedCreateWithoutTherapeuticClassInput = {
     id?: string
     dci: string
+    codedci: string
     commercialName: string
     form: $Enums.MedicationForm
     dosage: string
@@ -21104,6 +22903,7 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    subClassId?: string | null
     batches?: MedicationBatchUncheckedCreateNestedManyWithoutMedicationInput
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMedicationInput
   }
@@ -21115,6 +22915,38 @@ export namespace Prisma {
 
   export type MedicationCreateManyTherapeuticClassInputEnvelope = {
     data: MedicationCreateManyTherapeuticClassInput | MedicationCreateManyTherapeuticClassInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SubClassCreateWithoutTherapeuticClassInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    medications?: MedicationCreateNestedManyWithoutSubClassInput
+  }
+
+  export type SubClassUncheckedCreateWithoutTherapeuticClassInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    medications?: MedicationUncheckedCreateNestedManyWithoutSubClassInput
+  }
+
+  export type SubClassCreateOrConnectWithoutTherapeuticClassInput = {
+    where: SubClassWhereUniqueInput
+    create: XOR<SubClassCreateWithoutTherapeuticClassInput, SubClassUncheckedCreateWithoutTherapeuticClassInput>
+  }
+
+  export type SubClassCreateManyTherapeuticClassInputEnvelope = {
+    data: SubClassCreateManyTherapeuticClassInput | SubClassCreateManyTherapeuticClassInput[]
     skipDuplicates?: boolean
   }
 
@@ -21140,6 +22972,7 @@ export namespace Prisma {
     NOT?: MedicationScalarWhereInput | MedicationScalarWhereInput[]
     id?: StringFilter<"Medication"> | string
     dci?: StringFilter<"Medication"> | string
+    codedci?: StringFilter<"Medication"> | string
     commercialName?: StringFilter<"Medication"> | string
     form?: EnumMedicationFormFilter<"Medication"> | $Enums.MedicationForm
     dosage?: StringFilter<"Medication"> | string
@@ -21150,29 +22983,213 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Medication"> | Date | string
     updatedAt?: DateTimeFilter<"Medication"> | Date | string
     therapeuticClassId?: StringFilter<"Medication"> | string
+    subClassId?: StringNullableFilter<"Medication"> | string | null
+  }
+
+  export type SubClassUpsertWithWhereUniqueWithoutTherapeuticClassInput = {
+    where: SubClassWhereUniqueInput
+    update: XOR<SubClassUpdateWithoutTherapeuticClassInput, SubClassUncheckedUpdateWithoutTherapeuticClassInput>
+    create: XOR<SubClassCreateWithoutTherapeuticClassInput, SubClassUncheckedCreateWithoutTherapeuticClassInput>
+  }
+
+  export type SubClassUpdateWithWhereUniqueWithoutTherapeuticClassInput = {
+    where: SubClassWhereUniqueInput
+    data: XOR<SubClassUpdateWithoutTherapeuticClassInput, SubClassUncheckedUpdateWithoutTherapeuticClassInput>
+  }
+
+  export type SubClassUpdateManyWithWhereWithoutTherapeuticClassInput = {
+    where: SubClassScalarWhereInput
+    data: XOR<SubClassUpdateManyMutationInput, SubClassUncheckedUpdateManyWithoutTherapeuticClassInput>
+  }
+
+  export type SubClassScalarWhereInput = {
+    AND?: SubClassScalarWhereInput | SubClassScalarWhereInput[]
+    OR?: SubClassScalarWhereInput[]
+    NOT?: SubClassScalarWhereInput | SubClassScalarWhereInput[]
+    id?: StringFilter<"SubClass"> | string
+    code?: StringFilter<"SubClass"> | string
+    name?: StringFilter<"SubClass"> | string
+    description?: StringNullableFilter<"SubClass"> | string | null
+    isActive?: BoolFilter<"SubClass"> | boolean
+    createdAt?: DateTimeFilter<"SubClass"> | Date | string
+    updatedAt?: DateTimeFilter<"SubClass"> | Date | string
+    therapeuticClassId?: StringFilter<"SubClass"> | string
+  }
+
+  export type TherapeuticClassCreateWithoutSubClassesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    medications?: MedicationCreateNestedManyWithoutTherapeuticClassInput
+  }
+
+  export type TherapeuticClassUncheckedCreateWithoutSubClassesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    medications?: MedicationUncheckedCreateNestedManyWithoutTherapeuticClassInput
+  }
+
+  export type TherapeuticClassCreateOrConnectWithoutSubClassesInput = {
+    where: TherapeuticClassWhereUniqueInput
+    create: XOR<TherapeuticClassCreateWithoutSubClassesInput, TherapeuticClassUncheckedCreateWithoutSubClassesInput>
+  }
+
+  export type MedicationCreateWithoutSubClassInput = {
+    id?: string
+    dci: string
+    codedci: string
+    commercialName: string
+    form: $Enums.MedicationForm
+    dosage: string
+    packagingUnit: $Enums.PackagingUnit
+    unitsPerPackage: number
+    minStockLevel: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    therapeuticClass: TherapeuticClassCreateNestedOneWithoutMedicationsInput
+    batches?: MedicationBatchCreateNestedManyWithoutMedicationInput
+    orderItems?: OrderItemCreateNestedManyWithoutMedicationInput
+  }
+
+  export type MedicationUncheckedCreateWithoutSubClassInput = {
+    id?: string
+    dci: string
+    codedci: string
+    commercialName: string
+    form: $Enums.MedicationForm
+    dosage: string
+    packagingUnit: $Enums.PackagingUnit
+    unitsPerPackage: number
+    minStockLevel: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    therapeuticClassId: string
+    batches?: MedicationBatchUncheckedCreateNestedManyWithoutMedicationInput
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutMedicationInput
+  }
+
+  export type MedicationCreateOrConnectWithoutSubClassInput = {
+    where: MedicationWhereUniqueInput
+    create: XOR<MedicationCreateWithoutSubClassInput, MedicationUncheckedCreateWithoutSubClassInput>
+  }
+
+  export type MedicationCreateManySubClassInputEnvelope = {
+    data: MedicationCreateManySubClassInput | MedicationCreateManySubClassInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TherapeuticClassUpsertWithoutSubClassesInput = {
+    update: XOR<TherapeuticClassUpdateWithoutSubClassesInput, TherapeuticClassUncheckedUpdateWithoutSubClassesInput>
+    create: XOR<TherapeuticClassCreateWithoutSubClassesInput, TherapeuticClassUncheckedCreateWithoutSubClassesInput>
+    where?: TherapeuticClassWhereInput
+  }
+
+  export type TherapeuticClassUpdateToOneWithWhereWithoutSubClassesInput = {
+    where?: TherapeuticClassWhereInput
+    data: XOR<TherapeuticClassUpdateWithoutSubClassesInput, TherapeuticClassUncheckedUpdateWithoutSubClassesInput>
+  }
+
+  export type TherapeuticClassUpdateWithoutSubClassesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    medications?: MedicationUpdateManyWithoutTherapeuticClassNestedInput
+  }
+
+  export type TherapeuticClassUncheckedUpdateWithoutSubClassesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    medications?: MedicationUncheckedUpdateManyWithoutTherapeuticClassNestedInput
+  }
+
+  export type MedicationUpsertWithWhereUniqueWithoutSubClassInput = {
+    where: MedicationWhereUniqueInput
+    update: XOR<MedicationUpdateWithoutSubClassInput, MedicationUncheckedUpdateWithoutSubClassInput>
+    create: XOR<MedicationCreateWithoutSubClassInput, MedicationUncheckedCreateWithoutSubClassInput>
+  }
+
+  export type MedicationUpdateWithWhereUniqueWithoutSubClassInput = {
+    where: MedicationWhereUniqueInput
+    data: XOR<MedicationUpdateWithoutSubClassInput, MedicationUncheckedUpdateWithoutSubClassInput>
+  }
+
+  export type MedicationUpdateManyWithWhereWithoutSubClassInput = {
+    where: MedicationScalarWhereInput
+    data: XOR<MedicationUpdateManyMutationInput, MedicationUncheckedUpdateManyWithoutSubClassInput>
   }
 
   export type TherapeuticClassCreateWithoutMedicationsInput = {
     id?: string
+    code: string
     name: string
     description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    subClasses?: SubClassCreateNestedManyWithoutTherapeuticClassInput
   }
 
   export type TherapeuticClassUncheckedCreateWithoutMedicationsInput = {
     id?: string
+    code: string
     name: string
     description?: string | null
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    subClasses?: SubClassUncheckedCreateNestedManyWithoutTherapeuticClassInput
   }
 
   export type TherapeuticClassCreateOrConnectWithoutMedicationsInput = {
     where: TherapeuticClassWhereUniqueInput
     create: XOR<TherapeuticClassCreateWithoutMedicationsInput, TherapeuticClassUncheckedCreateWithoutMedicationsInput>
+  }
+
+  export type SubClassCreateWithoutMedicationsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    therapeuticClass: TherapeuticClassCreateNestedOneWithoutSubClassesInput
+  }
+
+  export type SubClassUncheckedCreateWithoutMedicationsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    therapeuticClassId: string
+  }
+
+  export type SubClassCreateOrConnectWithoutMedicationsInput = {
+    where: SubClassWhereUniqueInput
+    create: XOR<SubClassCreateWithoutMedicationsInput, SubClassUncheckedCreateWithoutMedicationsInput>
   }
 
   export type MedicationBatchCreateWithoutMedicationInput = {
@@ -21258,20 +23275,57 @@ export namespace Prisma {
 
   export type TherapeuticClassUpdateWithoutMedicationsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subClasses?: SubClassUpdateManyWithoutTherapeuticClassNestedInput
   }
 
   export type TherapeuticClassUncheckedUpdateWithoutMedicationsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subClasses?: SubClassUncheckedUpdateManyWithoutTherapeuticClassNestedInput
+  }
+
+  export type SubClassUpsertWithoutMedicationsInput = {
+    update: XOR<SubClassUpdateWithoutMedicationsInput, SubClassUncheckedUpdateWithoutMedicationsInput>
+    create: XOR<SubClassCreateWithoutMedicationsInput, SubClassUncheckedCreateWithoutMedicationsInput>
+    where?: SubClassWhereInput
+  }
+
+  export type SubClassUpdateToOneWithWhereWithoutMedicationsInput = {
+    where?: SubClassWhereInput
+    data: XOR<SubClassUpdateWithoutMedicationsInput, SubClassUncheckedUpdateWithoutMedicationsInput>
+  }
+
+  export type SubClassUpdateWithoutMedicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    therapeuticClass?: TherapeuticClassUpdateOneRequiredWithoutSubClassesNestedInput
+  }
+
+  export type SubClassUncheckedUpdateWithoutMedicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    therapeuticClassId?: StringFieldUpdateOperationsInput | string
   }
 
   export type MedicationBatchUpsertWithWhereUniqueWithoutMedicationInput = {
@@ -21339,6 +23393,7 @@ export namespace Prisma {
   export type MedicationCreateWithoutBatchesInput = {
     id?: string
     dci: string
+    codedci: string
     commercialName: string
     form: $Enums.MedicationForm
     dosage: string
@@ -21349,12 +23404,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     therapeuticClass: TherapeuticClassCreateNestedOneWithoutMedicationsInput
+    subClass?: SubClassCreateNestedOneWithoutMedicationsInput
     orderItems?: OrderItemCreateNestedManyWithoutMedicationInput
   }
 
   export type MedicationUncheckedCreateWithoutBatchesInput = {
     id?: string
     dci: string
+    codedci: string
     commercialName: string
     form: $Enums.MedicationForm
     dosage: string
@@ -21365,6 +23422,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     therapeuticClassId: string
+    subClassId?: string | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutMedicationInput
   }
 
@@ -21449,6 +23507,7 @@ export namespace Prisma {
   export type MedicationUpdateWithoutBatchesInput = {
     id?: StringFieldUpdateOperationsInput | string
     dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
     commercialName?: StringFieldUpdateOperationsInput | string
     form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
     dosage?: StringFieldUpdateOperationsInput | string
@@ -21459,12 +23518,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     therapeuticClass?: TherapeuticClassUpdateOneRequiredWithoutMedicationsNestedInput
+    subClass?: SubClassUpdateOneWithoutMedicationsNestedInput
     orderItems?: OrderItemUpdateManyWithoutMedicationNestedInput
   }
 
   export type MedicationUncheckedUpdateWithoutBatchesInput = {
     id?: StringFieldUpdateOperationsInput | string
     dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
     commercialName?: StringFieldUpdateOperationsInput | string
     form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
     dosage?: StringFieldUpdateOperationsInput | string
@@ -21475,6 +23536,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     therapeuticClassId?: StringFieldUpdateOperationsInput | string
+    subClassId?: NullableStringFieldUpdateOperationsInput | string | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutMedicationNestedInput
   }
 
@@ -21560,6 +23622,8 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     address?: string | null
+    nif: string
+    rc: string
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21572,6 +23636,8 @@ export namespace Prisma {
     email?: string | null
     phone?: string | null
     address?: string | null
+    nif: string
+    rc: string
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -21635,6 +23701,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    nif?: StringFieldUpdateOperationsInput | string
+    rc?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21647,6 +23715,8 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    nif?: StringFieldUpdateOperationsInput | string
+    rc?: StringFieldUpdateOperationsInput | string
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22206,6 +24276,7 @@ export namespace Prisma {
   export type MedicationCreateWithoutOrderItemsInput = {
     id?: string
     dci: string
+    codedci: string
     commercialName: string
     form: $Enums.MedicationForm
     dosage: string
@@ -22216,12 +24287,14 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     therapeuticClass: TherapeuticClassCreateNestedOneWithoutMedicationsInput
+    subClass?: SubClassCreateNestedOneWithoutMedicationsInput
     batches?: MedicationBatchCreateNestedManyWithoutMedicationInput
   }
 
   export type MedicationUncheckedCreateWithoutOrderItemsInput = {
     id?: string
     dci: string
+    codedci: string
     commercialName: string
     form: $Enums.MedicationForm
     dosage: string
@@ -22232,6 +24305,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     therapeuticClassId: string
+    subClassId?: string | null
     batches?: MedicationBatchUncheckedCreateNestedManyWithoutMedicationInput
   }
 
@@ -22329,6 +24403,7 @@ export namespace Prisma {
   export type MedicationUpdateWithoutOrderItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
     commercialName?: StringFieldUpdateOperationsInput | string
     form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
     dosage?: StringFieldUpdateOperationsInput | string
@@ -22339,12 +24414,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     therapeuticClass?: TherapeuticClassUpdateOneRequiredWithoutMedicationsNestedInput
+    subClass?: SubClassUpdateOneWithoutMedicationsNestedInput
     batches?: MedicationBatchUpdateManyWithoutMedicationNestedInput
   }
 
   export type MedicationUncheckedUpdateWithoutOrderItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
     commercialName?: StringFieldUpdateOperationsInput | string
     form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
     dosage?: StringFieldUpdateOperationsInput | string
@@ -22355,6 +24432,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     therapeuticClassId?: StringFieldUpdateOperationsInput | string
+    subClassId?: NullableStringFieldUpdateOperationsInput | string | null
     batches?: MedicationBatchUncheckedUpdateManyWithoutMedicationNestedInput
   }
 
@@ -22815,6 +24893,7 @@ export namespace Prisma {
   export type MedicationCreateManyTherapeuticClassInput = {
     id?: string
     dci: string
+    codedci: string
     commercialName: string
     form: $Enums.MedicationForm
     dosage: string
@@ -22824,11 +24903,23 @@ export namespace Prisma {
     isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+    subClassId?: string | null
+  }
+
+  export type SubClassCreateManyTherapeuticClassInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type MedicationUpdateWithoutTherapeuticClassInput = {
     id?: StringFieldUpdateOperationsInput | string
     dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
     commercialName?: StringFieldUpdateOperationsInput | string
     form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
     dosage?: StringFieldUpdateOperationsInput | string
@@ -22838,6 +24929,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subClass?: SubClassUpdateOneWithoutMedicationsNestedInput
     batches?: MedicationBatchUpdateManyWithoutMedicationNestedInput
     orderItems?: OrderItemUpdateManyWithoutMedicationNestedInput
   }
@@ -22845,6 +24937,7 @@ export namespace Prisma {
   export type MedicationUncheckedUpdateWithoutTherapeuticClassInput = {
     id?: StringFieldUpdateOperationsInput | string
     dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
     commercialName?: StringFieldUpdateOperationsInput | string
     form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
     dosage?: StringFieldUpdateOperationsInput | string
@@ -22854,6 +24947,7 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subClassId?: NullableStringFieldUpdateOperationsInput | string | null
     batches?: MedicationBatchUncheckedUpdateManyWithoutMedicationNestedInput
     orderItems?: OrderItemUncheckedUpdateManyWithoutMedicationNestedInput
   }
@@ -22861,6 +24955,7 @@ export namespace Prisma {
   export type MedicationUncheckedUpdateManyWithoutTherapeuticClassInput = {
     id?: StringFieldUpdateOperationsInput | string
     dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
     commercialName?: StringFieldUpdateOperationsInput | string
     form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
     dosage?: StringFieldUpdateOperationsInput | string
@@ -22870,6 +24965,107 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subClassId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SubClassUpdateWithoutTherapeuticClassInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    medications?: MedicationUpdateManyWithoutSubClassNestedInput
+  }
+
+  export type SubClassUncheckedUpdateWithoutTherapeuticClassInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    medications?: MedicationUncheckedUpdateManyWithoutSubClassNestedInput
+  }
+
+  export type SubClassUncheckedUpdateManyWithoutTherapeuticClassInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MedicationCreateManySubClassInput = {
+    id?: string
+    dci: string
+    codedci: string
+    commercialName: string
+    form: $Enums.MedicationForm
+    dosage: string
+    packagingUnit: $Enums.PackagingUnit
+    unitsPerPackage: number
+    minStockLevel: number
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    therapeuticClassId: string
+  }
+
+  export type MedicationUpdateWithoutSubClassInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
+    commercialName?: StringFieldUpdateOperationsInput | string
+    form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
+    dosage?: StringFieldUpdateOperationsInput | string
+    packagingUnit?: EnumPackagingUnitFieldUpdateOperationsInput | $Enums.PackagingUnit
+    unitsPerPackage?: IntFieldUpdateOperationsInput | number
+    minStockLevel?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    therapeuticClass?: TherapeuticClassUpdateOneRequiredWithoutMedicationsNestedInput
+    batches?: MedicationBatchUpdateManyWithoutMedicationNestedInput
+    orderItems?: OrderItemUpdateManyWithoutMedicationNestedInput
+  }
+
+  export type MedicationUncheckedUpdateWithoutSubClassInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
+    commercialName?: StringFieldUpdateOperationsInput | string
+    form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
+    dosage?: StringFieldUpdateOperationsInput | string
+    packagingUnit?: EnumPackagingUnitFieldUpdateOperationsInput | $Enums.PackagingUnit
+    unitsPerPackage?: IntFieldUpdateOperationsInput | number
+    minStockLevel?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    therapeuticClassId?: StringFieldUpdateOperationsInput | string
+    batches?: MedicationBatchUncheckedUpdateManyWithoutMedicationNestedInput
+    orderItems?: OrderItemUncheckedUpdateManyWithoutMedicationNestedInput
+  }
+
+  export type MedicationUncheckedUpdateManyWithoutSubClassInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    dci?: StringFieldUpdateOperationsInput | string
+    codedci?: StringFieldUpdateOperationsInput | string
+    commercialName?: StringFieldUpdateOperationsInput | string
+    form?: EnumMedicationFormFieldUpdateOperationsInput | $Enums.MedicationForm
+    dosage?: StringFieldUpdateOperationsInput | string
+    packagingUnit?: EnumPackagingUnitFieldUpdateOperationsInput | $Enums.PackagingUnit
+    unitsPerPackage?: IntFieldUpdateOperationsInput | number
+    minStockLevel?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    therapeuticClassId?: StringFieldUpdateOperationsInput | string
   }
 
   export type MedicationBatchCreateManyMedicationInput = {
