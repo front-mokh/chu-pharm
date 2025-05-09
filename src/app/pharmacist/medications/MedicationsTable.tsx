@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import TableWrapper from "@/components/custom/TableWrapper"; // Ensure this component exists
 import UpdateAction from "@/components/custom/UpdateAction"; // Ensure this component exists
 import DeleteAction from "@/components/custom/DeleteAction"; // Ensure this component exists
-import { prettifyEnum } from "@/lib/utils";
+
 import {
   Medication,
   TherapeuticClass as PrismaTherapeuticClass,
@@ -21,7 +21,7 @@ import {
 } from "@/generated/prisma";
 import {
   MedicationFormLabels,
-  PackagingUnitLabels,
+
 } from "@/utils/translations"; 
 import UpdateMedicationDialog from "./UpdateMedicationDialog";
 import DeleteMedicationDialog from "./DeleteMedicationDialog";

@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-
+import { prisma } from "@/lib/db";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -31,4 +31,15 @@ export function formatCurrency(
     style: "currency",
     currency: "DZD",
   }).format(value);
+}
+
+
+
+export async function getUserServiceId(userId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { serviceId: true },
+  });
+
+  return user?.serviceId ?? null;
 }
