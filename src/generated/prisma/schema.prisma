@@ -140,19 +140,21 @@ enum PackagingUnit {
 
 // Medication Batch model (for expiration tracking)
 model MedicationBatch {
-  id              String   @id @default(uuid())
+  id              String     @id @default(uuid())
+  medicationId    String
+  medication      Medication @relation(fields: [medicationId], references: [id], onDelete: Cascade) // Added onDelete for cascading deletes if a medication is removed
   batchNumber     String
   expirationDate  DateTime
   currentQuantity Int
   initialQuantity Int
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 
   // Relationships
-  medicationId String
-  medication   Medication   @relation(fields: [medicationId], references: [id])
   stockEntries StockEntry[]
   stockExits   StockExit[]
+
+  @@unique([medicationId, batchNumber], name: "unique_medication_batch") // Ensures batch number is unique per medication
 }
 
 // Stock Entry model (for incoming stock)

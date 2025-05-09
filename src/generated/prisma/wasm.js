@@ -177,13 +177,13 @@ exports.Prisma.MedicationScalarFieldEnum = {
 
 exports.Prisma.MedicationBatchScalarFieldEnum = {
   id: 'id',
+  medicationId: 'medicationId',
   batchNumber: 'batchNumber',
   expirationDate: 'expirationDate',
   currentQuantity: 'currentQuantity',
   initialQuantity: 'initialQuantity',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  medicationId: 'medicationId'
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.StockEntryScalarFieldEnum = {

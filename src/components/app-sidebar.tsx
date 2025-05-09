@@ -2,13 +2,14 @@
 
 import * as React from "react";
 import {
-  Layers,
   LucideIcon,
   UsersRound,
   Contact,
   Inbox,
   LayoutDashboard,
   Pill,
+  PillIcon,
+  ShoppingBag,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -71,10 +72,28 @@ export function AppSidebar({
           url: "/pharmacist/dashboard",
           icon: LayoutDashboard,
         },
+        { title: "Stock", url: "/pharmacist/stock", icon: ShoppingBag },
+        {
+          title: "Commandes",
+          url: "/pharmacist/orders",
+          icon: Inbox,
+          items: [
+            {
+              title: "En Attente de Validation",
+              url: "/pharmacist/orders/pending",
+              icon: Inbox,
+            },
+          ],
+        },
         {
           title: "Classes Thérapeutiques",
           url: "/pharmacist/therapeutic-classes",
           icon: UsersRound,
+        },
+        {
+          title: "Médicaments",
+          url: "/pharmacist/medications",
+          icon: PillIcon,
         },
       ];
       break;

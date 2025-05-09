@@ -9,10 +9,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-export default function TextField({
+export default function NumberField({
   control,
   name,
   label,
+  min = 0,
+  step = 1,
+  max,
   placeholder,
   disabled,
 }: {
@@ -20,6 +23,9 @@ export default function TextField({
   control: Control<any>;
   name: string;
   label: string;
+  min?: number;
+  step?: number;
+  max?: number;
   placeholder: string;
   disabled?: boolean;
 }) {
@@ -31,7 +37,17 @@ export default function TextField({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} disabled={disabled} {...field} />
+            <Input
+              type="number"
+              min={min}
+              max={max}
+              step={step}
+              placeholder={placeholder}
+              disabled={disabled}
+              {...field}
+              value={Number(field.value)}
+              onChange={(e) => field.onChange(Number(e.target.value))}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>

@@ -55,7 +55,7 @@ export default function SelectField({
               disabled={disabled}
             >
               <FormControl>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder={placeholder}>
                     {selectedOption ? selectedOption.label : placeholder}
                   </SelectValue>

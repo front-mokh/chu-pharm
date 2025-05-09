@@ -8103,35 +8103,35 @@ export namespace Prisma {
 
   export type MedicationBatchMinAggregateOutputType = {
     id: string | null
+    medicationId: string | null
     batchNumber: string | null
     expirationDate: Date | null
     currentQuantity: number | null
     initialQuantity: number | null
     createdAt: Date | null
     updatedAt: Date | null
-    medicationId: string | null
   }
 
   export type MedicationBatchMaxAggregateOutputType = {
     id: string | null
+    medicationId: string | null
     batchNumber: string | null
     expirationDate: Date | null
     currentQuantity: number | null
     initialQuantity: number | null
     createdAt: Date | null
     updatedAt: Date | null
-    medicationId: string | null
   }
 
   export type MedicationBatchCountAggregateOutputType = {
     id: number
+    medicationId: number
     batchNumber: number
     expirationDate: number
     currentQuantity: number
     initialQuantity: number
     createdAt: number
     updatedAt: number
-    medicationId: number
     _all: number
   }
 
@@ -8148,35 +8148,35 @@ export namespace Prisma {
 
   export type MedicationBatchMinAggregateInputType = {
     id?: true
+    medicationId?: true
     batchNumber?: true
     expirationDate?: true
     currentQuantity?: true
     initialQuantity?: true
     createdAt?: true
     updatedAt?: true
-    medicationId?: true
   }
 
   export type MedicationBatchMaxAggregateInputType = {
     id?: true
+    medicationId?: true
     batchNumber?: true
     expirationDate?: true
     currentQuantity?: true
     initialQuantity?: true
     createdAt?: true
     updatedAt?: true
-    medicationId?: true
   }
 
   export type MedicationBatchCountAggregateInputType = {
     id?: true
+    medicationId?: true
     batchNumber?: true
     expirationDate?: true
     currentQuantity?: true
     initialQuantity?: true
     createdAt?: true
     updatedAt?: true
-    medicationId?: true
     _all?: true
   }
 
@@ -8268,13 +8268,13 @@ export namespace Prisma {
 
   export type MedicationBatchGroupByOutputType = {
     id: string
+    medicationId: string
     batchNumber: string
     expirationDate: Date
     currentQuantity: number
     initialQuantity: number
     createdAt: Date
     updatedAt: Date
-    medicationId: string
     _count: MedicationBatchCountAggregateOutputType | null
     _avg: MedicationBatchAvgAggregateOutputType | null
     _sum: MedicationBatchSumAggregateOutputType | null
@@ -8298,13 +8298,13 @@ export namespace Prisma {
 
   export type MedicationBatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    medicationId?: boolean
     batchNumber?: boolean
     expirationDate?: boolean
     currentQuantity?: boolean
     initialQuantity?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    medicationId?: boolean
     medication?: boolean | MedicationDefaultArgs<ExtArgs>
     stockEntries?: boolean | MedicationBatch$stockEntriesArgs<ExtArgs>
     stockExits?: boolean | MedicationBatch$stockExitsArgs<ExtArgs>
@@ -8313,40 +8313,40 @@ export namespace Prisma {
 
   export type MedicationBatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    medicationId?: boolean
     batchNumber?: boolean
     expirationDate?: boolean
     currentQuantity?: boolean
     initialQuantity?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    medicationId?: boolean
     medication?: boolean | MedicationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["medicationBatch"]>
 
   export type MedicationBatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    medicationId?: boolean
     batchNumber?: boolean
     expirationDate?: boolean
     currentQuantity?: boolean
     initialQuantity?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    medicationId?: boolean
     medication?: boolean | MedicationDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["medicationBatch"]>
 
   export type MedicationBatchSelectScalar = {
     id?: boolean
+    medicationId?: boolean
     batchNumber?: boolean
     expirationDate?: boolean
     currentQuantity?: boolean
     initialQuantity?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    medicationId?: boolean
   }
 
-  export type MedicationBatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "batchNumber" | "expirationDate" | "currentQuantity" | "initialQuantity" | "createdAt" | "updatedAt" | "medicationId", ExtArgs["result"]["medicationBatch"]>
+  export type MedicationBatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "medicationId" | "batchNumber" | "expirationDate" | "currentQuantity" | "initialQuantity" | "createdAt" | "updatedAt", ExtArgs["result"]["medicationBatch"]>
   export type MedicationBatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     medication?: boolean | MedicationDefaultArgs<ExtArgs>
     stockEntries?: boolean | MedicationBatch$stockEntriesArgs<ExtArgs>
@@ -8369,13 +8369,13 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      medicationId: string
       batchNumber: string
       expirationDate: Date
       currentQuantity: number
       initialQuantity: number
       createdAt: Date
       updatedAt: Date
-      medicationId: string
     }, ExtArgs["result"]["medicationBatch"]>
     composites: {}
   }
@@ -8803,13 +8803,13 @@ export namespace Prisma {
    */
   interface MedicationBatchFieldRefs {
     readonly id: FieldRef<"MedicationBatch", 'String'>
+    readonly medicationId: FieldRef<"MedicationBatch", 'String'>
     readonly batchNumber: FieldRef<"MedicationBatch", 'String'>
     readonly expirationDate: FieldRef<"MedicationBatch", 'DateTime'>
     readonly currentQuantity: FieldRef<"MedicationBatch", 'Int'>
     readonly initialQuantity: FieldRef<"MedicationBatch", 'Int'>
     readonly createdAt: FieldRef<"MedicationBatch", 'DateTime'>
     readonly updatedAt: FieldRef<"MedicationBatch", 'DateTime'>
-    readonly medicationId: FieldRef<"MedicationBatch", 'String'>
   }
     
 
@@ -16247,13 +16247,13 @@ export namespace Prisma {
 
   export const MedicationBatchScalarFieldEnum: {
     id: 'id',
+    medicationId: 'medicationId',
     batchNumber: 'batchNumber',
     expirationDate: 'expirationDate',
     currentQuantity: 'currentQuantity',
     initialQuantity: 'initialQuantity',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
-    medicationId: 'medicationId'
+    updatedAt: 'updatedAt'
   };
 
   export type MedicationBatchScalarFieldEnum = (typeof MedicationBatchScalarFieldEnum)[keyof typeof MedicationBatchScalarFieldEnum]
@@ -16931,13 +16931,13 @@ export namespace Prisma {
     OR?: MedicationBatchWhereInput[]
     NOT?: MedicationBatchWhereInput | MedicationBatchWhereInput[]
     id?: StringFilter<"MedicationBatch"> | string
+    medicationId?: StringFilter<"MedicationBatch"> | string
     batchNumber?: StringFilter<"MedicationBatch"> | string
     expirationDate?: DateTimeFilter<"MedicationBatch"> | Date | string
     currentQuantity?: IntFilter<"MedicationBatch"> | number
     initialQuantity?: IntFilter<"MedicationBatch"> | number
     createdAt?: DateTimeFilter<"MedicationBatch"> | Date | string
     updatedAt?: DateTimeFilter<"MedicationBatch"> | Date | string
-    medicationId?: StringFilter<"MedicationBatch"> | string
     medication?: XOR<MedicationScalarRelationFilter, MedicationWhereInput>
     stockEntries?: StockEntryListRelationFilter
     stockExits?: StockExitListRelationFilter
@@ -16945,13 +16945,13 @@ export namespace Prisma {
 
   export type MedicationBatchOrderByWithRelationInput = {
     id?: SortOrder
+    medicationId?: SortOrder
     batchNumber?: SortOrder
     expirationDate?: SortOrder
     currentQuantity?: SortOrder
     initialQuantity?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    medicationId?: SortOrder
     medication?: MedicationOrderByWithRelationInput
     stockEntries?: StockEntryOrderByRelationAggregateInput
     stockExits?: StockExitOrderByRelationAggregateInput
@@ -16959,30 +16959,31 @@ export namespace Prisma {
 
   export type MedicationBatchWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    unique_medication_batch?: MedicationBatchUnique_medication_batchCompoundUniqueInput
     AND?: MedicationBatchWhereInput | MedicationBatchWhereInput[]
     OR?: MedicationBatchWhereInput[]
     NOT?: MedicationBatchWhereInput | MedicationBatchWhereInput[]
+    medicationId?: StringFilter<"MedicationBatch"> | string
     batchNumber?: StringFilter<"MedicationBatch"> | string
     expirationDate?: DateTimeFilter<"MedicationBatch"> | Date | string
     currentQuantity?: IntFilter<"MedicationBatch"> | number
     initialQuantity?: IntFilter<"MedicationBatch"> | number
     createdAt?: DateTimeFilter<"MedicationBatch"> | Date | string
     updatedAt?: DateTimeFilter<"MedicationBatch"> | Date | string
-    medicationId?: StringFilter<"MedicationBatch"> | string
     medication?: XOR<MedicationScalarRelationFilter, MedicationWhereInput>
     stockEntries?: StockEntryListRelationFilter
     stockExits?: StockExitListRelationFilter
-  }, "id">
+  }, "id" | "unique_medication_batch">
 
   export type MedicationBatchOrderByWithAggregationInput = {
     id?: SortOrder
+    medicationId?: SortOrder
     batchNumber?: SortOrder
     expirationDate?: SortOrder
     currentQuantity?: SortOrder
     initialQuantity?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    medicationId?: SortOrder
     _count?: MedicationBatchCountOrderByAggregateInput
     _avg?: MedicationBatchAvgOrderByAggregateInput
     _max?: MedicationBatchMaxOrderByAggregateInput
@@ -16995,13 +16996,13 @@ export namespace Prisma {
     OR?: MedicationBatchScalarWhereWithAggregatesInput[]
     NOT?: MedicationBatchScalarWhereWithAggregatesInput | MedicationBatchScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"MedicationBatch"> | string
+    medicationId?: StringWithAggregatesFilter<"MedicationBatch"> | string
     batchNumber?: StringWithAggregatesFilter<"MedicationBatch"> | string
     expirationDate?: DateTimeWithAggregatesFilter<"MedicationBatch"> | Date | string
     currentQuantity?: IntWithAggregatesFilter<"MedicationBatch"> | number
     initialQuantity?: IntWithAggregatesFilter<"MedicationBatch"> | number
     createdAt?: DateTimeWithAggregatesFilter<"MedicationBatch"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"MedicationBatch"> | Date | string
-    medicationId?: StringWithAggregatesFilter<"MedicationBatch"> | string
   }
 
   export type StockEntryWhereInput = {
@@ -17934,13 +17935,13 @@ export namespace Prisma {
 
   export type MedicationBatchUncheckedCreateInput = {
     id?: string
+    medicationId: string
     batchNumber: string
     expirationDate: Date | string
     currentQuantity: number
     initialQuantity: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    medicationId: string
     stockEntries?: StockEntryUncheckedCreateNestedManyWithoutBatchInput
     stockExits?: StockExitUncheckedCreateNestedManyWithoutBatchInput
   }
@@ -17960,26 +17961,26 @@ export namespace Prisma {
 
   export type MedicationBatchUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    medicationId?: StringFieldUpdateOperationsInput | string
     batchNumber?: StringFieldUpdateOperationsInput | string
     expirationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     currentQuantity?: IntFieldUpdateOperationsInput | number
     initialQuantity?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    medicationId?: StringFieldUpdateOperationsInput | string
     stockEntries?: StockEntryUncheckedUpdateManyWithoutBatchNestedInput
     stockExits?: StockExitUncheckedUpdateManyWithoutBatchNestedInput
   }
 
   export type MedicationBatchCreateManyInput = {
     id?: string
+    medicationId: string
     batchNumber: string
     expirationDate: Date | string
     currentQuantity: number
     initialQuantity: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    medicationId: string
   }
 
   export type MedicationBatchUpdateManyMutationInput = {
@@ -17994,13 +17995,13 @@ export namespace Prisma {
 
   export type MedicationBatchUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    medicationId?: StringFieldUpdateOperationsInput | string
     batchNumber?: StringFieldUpdateOperationsInput | string
     expirationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     currentQuantity?: IntFieldUpdateOperationsInput | number
     initialQuantity?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    medicationId?: StringFieldUpdateOperationsInput | string
   }
 
   export type StockEntryCreateInput = {
@@ -18957,15 +18958,20 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type MedicationBatchUnique_medication_batchCompoundUniqueInput = {
+    medicationId: string
+    batchNumber: string
+  }
+
   export type MedicationBatchCountOrderByAggregateInput = {
     id?: SortOrder
+    medicationId?: SortOrder
     batchNumber?: SortOrder
     expirationDate?: SortOrder
     currentQuantity?: SortOrder
     initialQuantity?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    medicationId?: SortOrder
   }
 
   export type MedicationBatchAvgOrderByAggregateInput = {
@@ -18975,24 +18981,24 @@ export namespace Prisma {
 
   export type MedicationBatchMaxOrderByAggregateInput = {
     id?: SortOrder
+    medicationId?: SortOrder
     batchNumber?: SortOrder
     expirationDate?: SortOrder
     currentQuantity?: SortOrder
     initialQuantity?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    medicationId?: SortOrder
   }
 
   export type MedicationBatchMinOrderByAggregateInput = {
     id?: SortOrder
+    medicationId?: SortOrder
     batchNumber?: SortOrder
     expirationDate?: SortOrder
     currentQuantity?: SortOrder
     initialQuantity?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    medicationId?: SortOrder
   }
 
   export type MedicationBatchSumOrderByAggregateInput = {
@@ -21289,13 +21295,13 @@ export namespace Prisma {
     OR?: MedicationBatchScalarWhereInput[]
     NOT?: MedicationBatchScalarWhereInput | MedicationBatchScalarWhereInput[]
     id?: StringFilter<"MedicationBatch"> | string
+    medicationId?: StringFilter<"MedicationBatch"> | string
     batchNumber?: StringFilter<"MedicationBatch"> | string
     expirationDate?: DateTimeFilter<"MedicationBatch"> | Date | string
     currentQuantity?: IntFilter<"MedicationBatch"> | number
     initialQuantity?: IntFilter<"MedicationBatch"> | number
     createdAt?: DateTimeFilter<"MedicationBatch"> | Date | string
     updatedAt?: DateTimeFilter<"MedicationBatch"> | Date | string
-    medicationId?: StringFilter<"MedicationBatch"> | string
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutMedicationInput = {
@@ -21532,13 +21538,13 @@ export namespace Prisma {
 
   export type MedicationBatchUncheckedCreateWithoutStockEntriesInput = {
     id?: string
+    medicationId: string
     batchNumber: string
     expirationDate: Date | string
     currentQuantity: number
     initialQuantity: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    medicationId: string
     stockExits?: StockExitUncheckedCreateNestedManyWithoutBatchInput
   }
 
@@ -21601,13 +21607,13 @@ export namespace Prisma {
 
   export type MedicationBatchUncheckedUpdateWithoutStockEntriesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    medicationId?: StringFieldUpdateOperationsInput | string
     batchNumber?: StringFieldUpdateOperationsInput | string
     expirationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     currentQuantity?: IntFieldUpdateOperationsInput | number
     initialQuantity?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    medicationId?: StringFieldUpdateOperationsInput | string
     stockExits?: StockExitUncheckedUpdateManyWithoutBatchNestedInput
   }
 
@@ -21660,13 +21666,13 @@ export namespace Prisma {
 
   export type MedicationBatchUncheckedCreateWithoutStockExitsInput = {
     id?: string
+    medicationId: string
     batchNumber: string
     expirationDate: Date | string
     currentQuantity: number
     initialQuantity: number
     createdAt?: Date | string
     updatedAt?: Date | string
-    medicationId: string
     stockEntries?: StockEntryUncheckedCreateNestedManyWithoutBatchInput
   }
 
@@ -21731,13 +21737,13 @@ export namespace Prisma {
 
   export type MedicationBatchUncheckedUpdateWithoutStockExitsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    medicationId?: StringFieldUpdateOperationsInput | string
     batchNumber?: StringFieldUpdateOperationsInput | string
     expirationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     currentQuantity?: IntFieldUpdateOperationsInput | number
     initialQuantity?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    medicationId?: StringFieldUpdateOperationsInput | string
     stockEntries?: StockEntryUncheckedUpdateManyWithoutBatchNestedInput
   }
 
