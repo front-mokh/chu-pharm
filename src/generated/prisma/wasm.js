@@ -146,6 +146,8 @@ exports.Prisma.SupplierScalarFieldEnum = {
   email: 'email',
   phone: 'phone',
   address: 'address',
+  nif: 'nif',
+  rc: 'rc',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

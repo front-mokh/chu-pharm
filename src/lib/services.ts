@@ -46,6 +46,8 @@ export type CreateSupplierInput = {
   email?: string;
   phone?: string;
   address?: string;
+  nif?: string; 
+  rc?: string; 
   isActive: boolean;
 };
 
@@ -55,8 +57,10 @@ export type UpdateSupplierInput = {
   email?: string;
   phone?: string;
   address?: string;
+  nif?: string; 
+  rc?: string;  
   isActive: boolean;
-};
+}
 
 // Types for Therapeutic Class inputs
 export type CreateTherapeuticClassInput = {

@@ -16,13 +16,11 @@ import TextAreaField from "@/components/custom/TextAreaField";
 const createSupplierSchema = z.object({
   name: z.string().min(1, "Le nom du fournisseur est obligatoire"),
   contactName: z.string().optional(),
-  email: z
-    .string()
-    .email("L'email doit être valide")
-    .optional()
-    .or(z.literal("")),
+  email: z.string().email("L'email doit être valide").optional().or(z.literal("")),
   phone: z.string().optional(),
   address: z.string().optional(),
+  nif: z.string().regex(/^\d{15}$/, "Le NIF doit contenir exactement 15 chiffres"),
+  rc: z.string().regex(/^[A-Za-z0-9]{10}$/, "Le RC doit contenir 10 caractères alphanumériques"),
   isActive: z.boolean().default(true),
 });
 
@@ -94,7 +92,18 @@ export default function AddSupplierDialog() {
             label="Nom du contact (Optionnel)"
             placeholder="Nom du contact"
           />
-
+          <TextField
+            control={form.control}
+            name="nif"
+            label="NIF (15 chiffres)"
+            placeholder="Ex: 123456789012345"
+          />
+          <TextField
+            control={form.control}
+            name="rc"
+            label="RC (10 caractères alphanumériques)"
+            placeholder="Ex: AB12345678"
+          />
           <div className="grid grid-cols-2 gap-4">
             <TextField
               control={form.control}
