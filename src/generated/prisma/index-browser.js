@@ -297,7 +297,6 @@ exports.UserRole = exports.$Enums.UserRole = {
 exports.MedicationForm = exports.$Enums.MedicationForm = {
   TABLET: 'TABLET',
   CAPSULE: 'CAPSULE',
-  LIQUID: 'LIQUID',
   INJECTION: 'INJECTION',
   CREAM: 'CREAM',
   OINTMENT: 'OINTMENT',
@@ -311,18 +310,14 @@ exports.MedicationForm = exports.$Enums.MedicationForm = {
 };
 
 exports.PackagingUnit = exports.$Enums.PackagingUnit = {
-  BOX: 'BOX',
-  BOTTLE: 'BOTTLE',
-  VIAL: 'VIAL',
-  AMPOULE: 'AMPOULE',
+  FLACON: 'FLACON',
   TUBE: 'TUBE',
-  BLISTER_PACK: 'BLISTER_PACK',
-  JAR: 'JAR',
-  BAG: 'BAG',
+  BOITE: 'BOITE',
+  AMPOULE: 'AMPOULE',
+  BLISTER: 'BLISTER',
   SACHET: 'SACHET',
-  SYRINGE: 'SYRINGE',
-  INHALER_DEVICE: 'INHALER_DEVICE',
-  OTHER: 'OTHER'
+  FLACON_POUDRE: 'FLACON_POUDRE',
+  PILULIER: 'PILULIER'
 };
 
 exports.ExitReason = exports.$Enums.ExitReason = {

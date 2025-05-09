@@ -136,7 +136,6 @@ model Medication {
 enum MedicationForm {
   TABLET
   CAPSULE
-  LIQUID
   INJECTION
   CREAM
   OINTMENT
@@ -150,19 +149,16 @@ enum MedicationForm {
 }
 
 enum PackagingUnit {
-  BOX
-  BOTTLE
-  VIAL
-  AMPOULE
+  FLACON
   TUBE
-  BLISTER_PACK
-  JAR
-  BAG
+  BOITE
+  AMPOULE
+  BLISTER
   SACHET
-  SYRINGE
-  INHALER_DEVICE
-  OTHER
+  FLACON_POUDRE
+  PILULIER
 }
+
 
 // Medication Batch model (for expiration tracking)
 model MedicationBatch {

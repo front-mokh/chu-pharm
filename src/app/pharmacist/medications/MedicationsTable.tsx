@@ -17,19 +17,25 @@ import { prettifyEnum } from "@/lib/utils";
 import {
   Medication,
   TherapeuticClass as PrismaTherapeuticClass,
+  SubClass
 } from "@/generated/prisma";
-
+import {
+  MedicationFormLabels,
+  PackagingUnitLabels,
+} from "@/utils/translations"; 
 import UpdateMedicationDialog from "./UpdateMedicationDialog";
 import DeleteMedicationDialog from "./DeleteMedicationDialog";
 
 interface MedicationsTableProps {
   medications: Array<Medication & { therapeuticClass: PrismaTherapeuticClass }>;
   therapeuticClasses: PrismaTherapeuticClass[]; // Needed for UpdateDialog's therapeutic class dropdown
+  subClasses: SubClass [];
 }
 
 export default function MedicationsTable({
   medications,
   therapeuticClasses,
+  subClasses,
 }: MedicationsTableProps) {
   if (!medications) {
     return (
@@ -46,9 +52,11 @@ export default function MedicationsTable({
           <TableRow>
             <TableHead className="w-[200px]">Nom Commercial</TableHead>
             <TableHead>DCI</TableHead>
+            <TableHead>Code DCI</TableHead>
             <TableHead>Forme</TableHead>
             <TableHead>Dosage</TableHead>
             <TableHead>Classe Thérapeutique</TableHead>
+            <TableHead>Sous classe</TableHead>
             <TableHead className="text-center">Stock Min.</TableHead>
             <TableHead className="text-center">Statut</TableHead>
             <TableHead className="text-right w-[100px]">Actions</TableHead>
@@ -71,9 +79,11 @@ export default function MedicationsTable({
                   {medication.commercialName}
                 </TableCell>
                 <TableCell>{medication.dci}</TableCell>
-                <TableCell>{prettifyEnum(medication.form)}</TableCell>
+                <TableCell>{medication.codedci}</TableCell>
+                <TableCell>{MedicationFormLabels[medication.form]}</TableCell>
                 <TableCell>{medication.dosage}</TableCell>
                 <TableCell>{medication.therapeuticClass.name}</TableCell>
+                <TableCell>{medication.subClass.name}</TableCell>
                 <TableCell className="text-center">
                   {medication.minStockLevel}
                 </TableCell>
@@ -95,6 +105,7 @@ export default function MedicationsTable({
                       trigger={<UpdateAction />}
                       medication={medication}
                       therapeuticClasses={therapeuticClasses}
+                      subClasses={subClasses}
                     />
                     <DeleteMedicationDialog
                       trigger={<DeleteAction />}

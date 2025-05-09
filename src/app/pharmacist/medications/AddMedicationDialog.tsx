@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -10,29 +10,45 @@ import CustomDialog from "@/components/custom/CustomDialog";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import TextField from "@/components/custom/TextField";
-import SelectField from "@/components/custom/SelectField";
-import { MedicationFormInput, medicationSchema } from "./schemas";
-import { createMedication } from "./service";
+import NumberField from "@/components/custom/NumberField";
+import SelectWithSearch from "@/components/custom/SelectWithSearch";
+import { MedicationFormLabels, PackagingUnitLabels } from "@/utils/translations";
+import {
+  MedicationFormInput,
+  medicationSchema,
+} from "./schemas";
 import {
   TherapeuticClass,
   MedicationForm,
   PackagingUnit,
+  SubClass,
 } from "@/generated/prisma";
-import { prettifyEnum } from "@/lib/utils";
-import NumberField from "@/components/custom/NumberField";
+// import { prettifyEnum } from "@/lib/utils";
+import { createMedication } from "./service";
 
-const enumToOptions = (enumObject: Record<string, string>) =>
-  Object.values(enumObject).map((value) => ({
-    value: value,
-    label: prettifyEnum(value),
-  }));
+// const enumToOptions = (enumObject: Record<string, string>) =>
+//   Object.values(enumObject).map((value) => ({
+//     value,
+//     label: prettifyEnum(value),
+//   }));
+
+  const enumToOptionss = (
+    enumObject: Record<string, string>,
+    labelMap?: Record<string, string>
+  ) =>
+    Object.values(enumObject).map((value) => ({
+      value,
+      label: labelMap?.[value] ?? value,
+    }));
 
 interface AddMedicationDialogProps {
   therapeuticClasses: TherapeuticClass[];
+  subClasses: SubClass[];
 }
 
 export default function AddMedicationDialog({
   therapeuticClasses,
+  subClasses,
 }: AddMedicationDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,16 +57,29 @@ export default function AddMedicationDialog({
     resolver: zodResolver(medicationSchema),
     defaultValues: {
       dci: "",
+      codedci: "",
       commercialName: "",
-      // form: undefined, // Let user select
       dosage: "",
-      // packagingUnit: undefined, // Let user select
-      unitsPerPackage: undefined, // Use undefined for coerce.number() to show placeholder
+      unitsPerPackage: undefined,
       minStockLevel: 0,
       therapeuticClassId: "",
+      subClassId: undefined,
       isActive: true,
     },
   });
+
+  const selectedTherapeuticClassId = useWatch({
+    control: form.control,
+    name: "therapeuticClassId",
+  });
+
+  const filteredSubClasses = useMemo(
+    () =>
+      subClasses.filter(
+        (sc) => sc.therapeuticClassId === selectedTherapeuticClassId
+      ),
+    [selectedTherapeuticClassId, subClasses]
+  );
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
@@ -67,15 +96,11 @@ export default function AddMedicationDialog({
         toast.success("Médicament créé avec succès!");
         handleOpenChange(false);
       } else {
-        toast.error(
-          result.error || "Erreur lors de la création du médicament."
-        );
+        toast.error(result.error || "Erreur lors de la création.");
       }
     } catch (error) {
       console.error("Create medication error:", error);
-      toast.error(
-        "Une erreur serveur est survenue lors de la création du médicament."
-      );
+      toast.error("Erreur serveur lors de la création.");
     } finally {
       setIsSubmitting(false);
     }
@@ -86,8 +111,13 @@ export default function AddMedicationDialog({
     label: tc.name,
   }));
 
-  const medicationFormOptions = enumToOptions(MedicationForm);
-  const packagingUnitOptions = enumToOptions(PackagingUnit);
+  const subClassOptions = filteredSubClasses.map((sc) => ({
+    value: sc.id,
+    label: sc.name,
+  }));
+
+  const medicationFormOptions = enumToOptionss(MedicationForm, MedicationFormLabels);
+  const packagingUnitOptions = enumToOptionss(PackagingUnit, PackagingUnitLabels);
 
   return (
     <CustomDialog
@@ -103,28 +133,28 @@ export default function AddMedicationDialog({
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mt-4">
+          {/* Basic info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <TextField
               control={form.control}
               name="dci"
-              label="DCI (Dénomination Commune Internationale)"
+              label="DCI"
               placeholder="Ex: Paracétamol"
             />
+            <TextField
+              control={form.control}
+              name="codedci"
+              label="Code DCI"
+              placeholder="Ex: 10M001"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <TextField
               control={form.control}
               name="commercialName"
               label="Nom Commercial"
               placeholder="Ex: Doliprane"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <SelectField
-              control={form.control}
-              name="form"
-              label="Forme Pharmaceutique"
-              placeholder="Sélectionner une forme"
-              options={medicationFormOptions}
             />
             <TextField
               control={form.control}
@@ -134,14 +164,25 @@ export default function AddMedicationDialog({
             />
           </div>
 
+          {/* Form & Packaging */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <SelectField
+            <SelectWithSearch
+              control={form.control}
+              name="form"
+              label="Forme Pharmaceutique"
+              placeholder="Sélectionner une forme"
+              options={medicationFormOptions}
+            />
+            <SelectWithSearch
               control={form.control}
               name="packagingUnit"
               label="Unité de Conditionnement"
               placeholder="Sélectionner une unité"
               options={packagingUnitOptions}
             />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <NumberField
               control={form.control}
               name="unitsPerPackage"
@@ -149,26 +190,40 @@ export default function AddMedicationDialog({
               placeholder="Ex: 30"
               min={1}
             />
+            <NumberField
+              control={form.control}
+              name="minStockLevel"
+              label="Stock Minimum (alerte)"
+              placeholder="Ex: 10"
+              min={0}
+            />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <SelectField
+          {/* Therapeutic class (full width) + subclass (below) */}
+          <div className="space-y-4">
+            <SelectWithSearch
               control={form.control}
               name="therapeuticClassId"
               label="Classe Thérapeutique"
               placeholder="Sélectionner une classe"
               options={therapeuticClassOptions}
+              onValueChange={() => form.setValue("subClassId", undefined)}
             />
-            <NumberField
+            <SelectWithSearch
               control={form.control}
-              name="minStockLevel"
-              label="Niveau de Stock Minimum (Alertes)"
-              placeholder="Ex: 10"
-              min={0}
+              name="subClassId"
+              label="Sous-classe Thérapeutique"
+              placeholder={
+                selectedTherapeuticClassId
+                  ? "Sélectionner une sous-classe"
+                  : "Sélectionnez d'abord une classe"
+              }
+              disabled={!selectedTherapeuticClassId}
+              options={subClassOptions}
             />
           </div>
-          {/* isActive defaults to true, not shown on Add form to simplify, but can be added with SwitchField */}
 
+          {/* Submit */}
           <div className="flex justify-end gap-2 pt-4">
             <Button
               type="button"

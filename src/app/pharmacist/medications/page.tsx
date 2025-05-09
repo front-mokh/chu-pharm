@@ -1,5 +1,5 @@
 import React from "react";
-import { getAllMedications, getAllActiveTherapeuticClasses } from "./service";
+import { getAllMedications, getAllActiveTherapeuticClasses, getAllActiveSubClasses } from "./service";
 import MedicationsPageClient from "./MedicationsPage";
 import { unstable_noStore as noStore } from "next/cache";
 
@@ -7,15 +7,17 @@ export default async function MedicationsServerPage() {
   noStore();
 
   try {
-    const [medications, therapeuticClasses] = await Promise.all([
+    const [medications, therapeuticClasses, subClasses] = await Promise.all([
       getAllMedications(),
       getAllActiveTherapeuticClasses(), // For dropdowns in forms
+      getAllActiveSubClasses(),
     ]);
 
     return (
       <MedicationsPageClient
         medications={medications}
         therapeuticClasses={therapeuticClasses}
+        subClasses={subClasses}
       />
     );
   } catch (error) {

@@ -133,7 +133,6 @@ model Medication {
 enum MedicationForm {
   TABLET
   CAPSULE
-  LIQUID
   INJECTION
   CREAM
   OINTMENT
@@ -147,18 +146,14 @@ enum MedicationForm {
 }
 
 enum PackagingUnit {
-  BOX
-  BOTTLE
-  VIAL
-  AMPOULE
+  FLACON
   TUBE
-  BLISTER_PACK
-  JAR
-  BAG
+  BOITE
+  AMPOULE
+  BLISTER
   SACHET
-  SYRINGE
-  INHALER_DEVICE
-  OTHER
+  FLACON_POUDRE
+  PILULIER
 }
 
 // Medication Batch model (for expiration tracking)
@@ -281,12 +276,15 @@ model OrderItem {
 }
 
 enum OrderItemStatus {
-  PENDING
-  VALIDATED
-  PARTIALLY_VALIDATED
-  NOT_AVAILABLE
+  PENDING // Default status when order is submitted
+  VALIDATED // Fully validated by pharmacist
+  PARTIALLY_VALIDATED // Partially validated by pharmacist
+  NOT_AVAILABLE // Marked as unavailable by pharmacist
+  // PREPARED and DELIVERED are for later stages
   PREPARED
   DELIVERED
+  // You might also want a REJECTED_BY_PHARMACIST status if an item is wholly unsuitable
+  // REJECTED_BY_PHARMACIST
 }
 
 // Delivery Note model

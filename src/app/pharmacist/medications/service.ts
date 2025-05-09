@@ -2,7 +2,7 @@
 "use server";
 
 import { MedicationFormInput, UpdateMedicationFormInput } from "./schemas";
-import { Medication, TherapeuticClass } from "@/generated/prisma"; // Or from '@prisma/client'
+import { Medication, TherapeuticClass, SubClass } from "@/generated/prisma"; // Or from '@prisma/client'
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
@@ -15,6 +15,7 @@ export async function getAllMedications(): Promise<
     return await prisma.medication.findMany({
       include: {
         therapeuticClass: true,
+        subClass: true,
       },
       orderBy: { commercialName: "asc" },
     });
@@ -30,7 +31,7 @@ export async function getMedicationById(
   try {
     return await prisma.medication.findUnique({
       where: { id },
-      include: { therapeuticClass: true },
+      include: { therapeuticClass: true, subClass: true },
     });
   } catch (error) {
     console.error(`Failed to fetch medication ${id}:`, error);
@@ -176,5 +177,17 @@ export async function getAllActiveTherapeuticClasses(): Promise<
     throw new Error(
       "Erreur lors de la récupération des classes thérapeutiques actives."
     );
+  }
+}
+
+export async function getAllActiveSubClasses(): Promise<SubClass[]> {
+  try {
+    return await prisma.subClass.findMany({
+      where: { isActive: true },
+      orderBy: { name: "asc" },
+    });
+  } catch (error) {
+    console.error("Error fetching subclasses:", error);
+    throw error;
   }
 }

@@ -3,6 +3,7 @@ import * as z from "zod";
 
 export const medicationSchema = z.object({
   dci: z.string().min(1, "Le DCI est obligatoire"),
+  codedci: z.string().min(1, "Le code DCI est obligatoire"),
   commercialName: z.string().min(1, "Le nom commercial est obligatoire"),
   form: z.nativeEnum(MedicationForm, {
     errorMap: () => ({ message: "La forme pharmaceutique est obligatoire" }),
@@ -25,6 +26,11 @@ export const medicationSchema = z.object({
     .string()
     .uuid("L'ID de la classe thérapeutique est invalide")
     .min(1, "La classe thérapeutique est obligatoire"),
+    subClassId: z
+    .string()
+    .uuid("ID invalide")
+    .optional().or(z.literal("").transform(() => undefined)), 
+  
   isActive: z.boolean().default(true), // Default to true for new medications
 });
 

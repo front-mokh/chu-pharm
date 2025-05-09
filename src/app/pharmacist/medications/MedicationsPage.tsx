@@ -14,6 +14,7 @@ import { usePagination } from "@/hooks/use-pagination"; // Ensure this hook exis
 import {
   Medication,
   TherapeuticClass as PrismaTherapeuticClass,
+  SubClass,
 } from "@/generated/prisma";
 
 import MedicationsTable from "./MedicationsTable";
@@ -22,11 +23,13 @@ import AddMedicationDialog from "./AddMedicationDialog";
 interface MedicationsPageClientProps {
   medications: Array<Medication & { therapeuticClass: PrismaTherapeuticClass }>;
   therapeuticClasses: PrismaTherapeuticClass[];
+  subClasses : SubClass[];
 }
 
 export default function MedicationsPageClient({
   medications,
   therapeuticClasses,
+  subClasses,
 }: MedicationsPageClientProps) {
   const { currentPage, totalPages, pageItems, handlePageChange } =
     usePagination<Medication & { therapeuticClass: PrismaTherapeuticClass }>(
@@ -48,7 +51,7 @@ export default function MedicationsPageClient({
                 disponibles.
               </CardDescription>
             </div>
-            <AddMedicationDialog therapeuticClasses={therapeuticClasses} />
+            <AddMedicationDialog therapeuticClasses={therapeuticClasses} subClasses={subClasses} />
           </div>
         </CardHeader>
         <CardContent className="flex-grow p-0 md:p-6">
@@ -56,6 +59,7 @@ export default function MedicationsPageClient({
           <MedicationsTable
             medications={pageItems}
             therapeuticClasses={therapeuticClasses}
+            subClasses={subClasses}
           />
         </CardContent>
         {totalPages > 0 && (

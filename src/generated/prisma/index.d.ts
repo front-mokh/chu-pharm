@@ -96,7 +96,6 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 export const MedicationForm: {
   TABLET: 'TABLET',
   CAPSULE: 'CAPSULE',
-  LIQUID: 'LIQUID',
   INJECTION: 'INJECTION',
   CREAM: 'CREAM',
   OINTMENT: 'OINTMENT',
@@ -113,18 +112,14 @@ export type MedicationForm = (typeof MedicationForm)[keyof typeof MedicationForm
 
 
 export const PackagingUnit: {
-  BOX: 'BOX',
-  BOTTLE: 'BOTTLE',
-  VIAL: 'VIAL',
-  AMPOULE: 'AMPOULE',
+  FLACON: 'FLACON',
   TUBE: 'TUBE',
-  BLISTER_PACK: 'BLISTER_PACK',
-  JAR: 'JAR',
-  BAG: 'BAG',
+  BOITE: 'BOITE',
+  AMPOULE: 'AMPOULE',
+  BLISTER: 'BLISTER',
   SACHET: 'SACHET',
-  SYRINGE: 'SYRINGE',
-  INHALER_DEVICE: 'INHALER_DEVICE',
-  OTHER: 'OTHER'
+  FLACON_POUDRE: 'FLACON_POUDRE',
+  PILULIER: 'PILULIER'
 };
 
 export type PackagingUnit = (typeof PackagingUnit)[keyof typeof PackagingUnit]

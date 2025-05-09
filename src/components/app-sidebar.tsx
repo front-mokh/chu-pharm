@@ -84,6 +84,11 @@ export function AppSidebar({
           url: "/pharmacist/dashboard",
           icon: LayoutDashboard,
         },
+         {
+          title: "Médicaments",
+          url: "/pharmacist/medications",
+          icon: PillIcon,
+        }, 
         { title: "Stock", url: "/pharmacist/stock", icon: ShoppingBag },
         {
           title: "Commandes",
@@ -96,16 +101,7 @@ export function AppSidebar({
             },
           ],
         },
-        {
-          title: "Classes Thérapeutiques",
-          url: "/pharmacist/therapeutic-classes",
-          icon: UsersRound,
-        },
-        {
-          title: "Médicaments",
-          url: "/pharmacist/medications",
-          icon: PillIcon,
-        },
+       
       ];
       break;
     case "SERVICE_COORDINATOR":
