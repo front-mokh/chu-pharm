@@ -1,3 +1,5 @@
+import { OrderStatus } from "@/generated/prisma";
+
 export const MedicationFormLabels: Record<string, string> = {
     TABLET: "Comprimé",
     CAPSULE: "Gélule",
@@ -25,3 +27,18 @@ export const MedicationFormLabels: Record<string, string> = {
     PILULIER: "Pilulier",
   };
   
+
+  export function translateOrderStatus(status: OrderStatus): string {
+    const statusMap: Record<OrderStatus, string> = {
+      DRAFT: "BROUILLON",
+      SUBMITTED: "SOUMISE",
+      VALIDATED: "VALIDÉE",
+      PARTIALLY_VALIDATED: "PARTIELLEMENT VALIDÉE",
+      IN_PREPARATION: "EN PRÉPARATION",
+      PREPARED: "PRÉPARÉE",
+      DELIVERED: "LIVRÉE",
+      CANCELLED: "ANNULÉE"
+    };
+    
+    return statusMap[status] || status;
+  }

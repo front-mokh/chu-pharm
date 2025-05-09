@@ -17,6 +17,8 @@ import DeleteAction from "@/components/custom/DeleteAction";
 import { Order, OrderItem, Medication, OrderStatus } from "@/generated/prisma";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import DeleteOrderDialog from "./DeleteOrderDialog";
+
 
 interface OrdersTableProps {
   orders: Array<Order & { orderItems: (OrderItem & { medication: Medication })[] }>;
@@ -94,9 +96,9 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                 <TableCell>{order.notes || "—"}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end space-x-2">
-                    {/* Replace with your real dialog handlers if needed */}
-                    <UpdateAction />
-                    <DeleteAction />
+                    
+                    <UpdateAction href={`/coordinator/orders/${order.id}/edit`} />
+                    <DeleteOrderDialog trigger={<DeleteAction />} order={order} />
                   </div>
                 </TableCell>
               </TableRow>
