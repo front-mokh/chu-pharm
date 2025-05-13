@@ -15,7 +15,7 @@ export default function SubClassesPage({ subClasses }: { subClasses: SubClass[] 
     <div className="h-full">
       <Card className="h-full">
      <CardHeader className="flex flex-row items-center justify-between">
-               <CardTitle>Gestion des Sous-Classes</CardTitle>
+          <CardTitle>Gestion des Sous-Classes</CardTitle>
           <AddSubClassDialog />
         </CardHeader>
         <CardContent>

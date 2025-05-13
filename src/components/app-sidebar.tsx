@@ -12,6 +12,7 @@ import {
   Pill,
   PillIcon,
   ShoppingBag,
+  Tags,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -129,13 +130,13 @@ export function AppSidebar({
           icon: LayoutDashboard,
         },
         {
-          title: "Utilisateurs",
-          url: "/service-coordinator/users",
-          icon: UsersRound,
+          title: "Orders",
+          url: "/coordinator/orders",
+          icon: Tags,
         },
         {
           title: "Services",
-          url: "/service-coordinator/services",
+          url: "/coordinator/services",
           icon: Inbox,
         },
         {
