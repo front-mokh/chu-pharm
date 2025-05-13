@@ -11,23 +11,14 @@ import {
 } from "@/components/ui/table";
 import TableWrapper from "@/components/custom/TableWrapper";
 import { formatDate, formatCurrency } from "@/lib/utils";
-import {
-  StockEntry,
-  Medication,
-  MedicationBatch,
-  Supplier,
-} from "@/generated/prisma";
 
-interface EntriesTableProps {
-  entries: Array<
-    StockEntry & {
-      batch: MedicationBatch & { medication: Medication };
-      supplier: Supplier;
-    }
-  >;
-}
+import { EntriesType } from "../schemas";
 
-export default function StockEntryTable({ entries }: EntriesTableProps) {
+export default function StockEntryTable({
+  entries,
+}: {
+  entries: EntriesType[];
+}) {
   if (!entries) {
     return (
       <div className="text-center py-8">Chargement des entrées de stock...</div>

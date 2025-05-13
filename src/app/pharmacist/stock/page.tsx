@@ -7,9 +7,9 @@ import {
   getAllActiveMedications,
   getAllActiveSuppliers,
 } from "./service";
-import StockManagementClient from "./StockManagementClient";
+import StockManagementPage from "./StockManagementPage";
 
-export default async function StockManagementPage() {
+export default async function page() {
   noStore();
 
   try {
@@ -20,7 +20,7 @@ export default async function StockManagementPage() {
     ]);
 
     return (
-      <StockManagementClient
+      <StockManagementPage
         batches={batches}
         medications={medications}
         suppliers={suppliers}

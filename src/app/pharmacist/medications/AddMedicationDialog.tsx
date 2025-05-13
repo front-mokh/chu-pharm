@@ -12,11 +12,11 @@ import { Form } from "@/components/ui/form";
 import TextField from "@/components/custom/TextField";
 import NumberField from "@/components/custom/NumberField";
 import SelectWithSearch from "@/components/custom/SelectWithSearch";
-import { MedicationFormLabels, PackagingUnitLabels } from "@/utils/translations";
 import {
-  MedicationFormInput,
-  medicationSchema,
-} from "./schemas";
+  MedicationFormLabels,
+  PackagingUnitLabels,
+} from "@/utils/translations";
+import { MedicationFormInput, medicationSchema } from "./schemas";
 import {
   TherapeuticClass,
   MedicationForm,
@@ -32,14 +32,14 @@ import { createMedication } from "./service";
 //     label: prettifyEnum(value),
 //   }));
 
-  const enumToOptionss = (
-    enumObject: Record<string, string>,
-    labelMap?: Record<string, string>
-  ) =>
-    Object.values(enumObject).map((value) => ({
-      value,
-      label: labelMap?.[value] ?? value,
-    }));
+const enumToOptionss = (
+  enumObject: Record<string, string>,
+  labelMap?: Record<string, string>
+) =>
+  Object.values(enumObject).map((value) => ({
+    value,
+    label: labelMap?.[value] ?? value,
+  }));
 
 interface AddMedicationDialogProps {
   therapeuticClasses: TherapeuticClass[];
@@ -116,8 +116,14 @@ export default function AddMedicationDialog({
     label: sc.name,
   }));
 
-  const medicationFormOptions = enumToOptionss(MedicationForm, MedicationFormLabels);
-  const packagingUnitOptions = enumToOptionss(PackagingUnit, PackagingUnitLabels);
+  const medicationFormOptions = enumToOptionss(
+    MedicationForm,
+    MedicationFormLabels
+  );
+  const packagingUnitOptions = enumToOptionss(
+    PackagingUnit,
+    PackagingUnitLabels
+  );
 
   return (
     <CustomDialog
