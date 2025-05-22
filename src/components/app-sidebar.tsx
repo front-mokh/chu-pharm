@@ -85,12 +85,30 @@ export function AppSidebar({
           url: "/pharmacist/dashboard",
           icon: LayoutDashboard,
         },
-         {
+        {
           title: "Médicaments",
           url: "/pharmacist/medications",
           icon: PillIcon,
-        }, 
-        { title: "Stock", url: "/pharmacist/stock", icon: ShoppingBag },
+        },
+        {
+          title: "Stock",
+          url: "/pharmacist/stock",
+          icon: ShoppingBag,
+          items: [
+            {
+              title: "Lots",
+              url: "/pharmacist/stock/batches",
+            },
+            {
+              title: "Entrées",
+              url: "/pharmacist/stock/entries",
+            },
+            {
+              title: "Sorties",
+              url: "/pharmacist/stock/exits",
+            },
+          ],
+        },
         {
           title: "Commandes",
           url: "/pharmacist/orders",
@@ -102,7 +120,6 @@ export function AppSidebar({
             },
           ],
         },
-       
       ];
       break;
     case "SERVICE_COORDINATOR":

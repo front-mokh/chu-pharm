@@ -17,13 +17,13 @@ import {
   StockEntry,
   StockExit,
   TherapeuticClass,
-  OrderItem, // If medication includes it
-} from "@/generated/prisma"; // Make sure all types are imported
+  OrderItem,
+} from "@/generated/prisma";
 import CustomPagination from "@/components/custom/CustomPagination";
 import { usePagination } from "@/hooks/use-pagination";
 
 import BatchStockTable from "./BatchStockTable";
-import StockEntryTable from "./StockEntryTable";
+import StockEntryTable from "./entries/StockEntryTable";
 import StockExitTable from "./StockExitTable";
 import AddBatchStockDialog from "./AddBatchStockDialog";
 import RecordStockExitDialog from "./RecordStockExitDialog"; // Already imported
@@ -37,12 +37,12 @@ export type ClientMedicationBatch = MedicationBatch & {
 
 interface StockManagementClientProps {
   batches: ClientMedicationBatch[];
-  medications: Array<Medication & { therapeuticClass: TherapeuticClass }>; // For dropdowns
-  suppliers: Supplier[]; // For dropdowns
+  medications: Array<Medication & { therapeuticClass: TherapeuticClass }>;
+  suppliers: Supplier[];
 }
 
-export default function StockManagementClient({
-  batches: initialBatches, // Renamed to avoid conflict with paginated batches
+export default function StockManagementPage({
+  batches: initialBatches,
   medications,
   suppliers,
 }: StockManagementClientProps) {
@@ -101,7 +101,6 @@ export default function StockManagementClient({
     totalPages: totalBatchPages,
     pageItems: pageBatches,
     handlePageChange: handleBatchPageChange,
-    setItems: setBatchesForPagination, // To update after new batch creation
   } = usePagination(currentBatches, 10);
 
   const {

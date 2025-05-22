@@ -16,9 +16,10 @@ import { formatDate, prettifyEnum } from "@/lib/utils";
 import { Button } from "@/components/ui/button"; // For action buttons
 import { Eye, MinusCircle, PackageSearch } from "lucide-react"; // Icons
 
-import RecordStockExitDialog from "./RecordStockExitDialog";
+import AddStockExitDialog from "../exits/AddStockExitDialog";
 import ViewBatchDetailsDialog from "./ViewBatchDetailsDialog";
 import { ClientMedicationBatch } from "./StockManagementPage"; // Use the more precise type
+import ViewAction from "@/components/custom/ViewAction";
 
 interface BatchStockTableProps {
   batches: ClientMedicationBatch[];
@@ -155,35 +156,25 @@ export default function BatchStockTable({
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end space-x-1">
-                      <ViewBatchDetailsDialog
-                        batch={batch}
-                        trigger={
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            title="Voir Détails"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                        }
+                      <ViewAction
+                        href={`/pharmacist/stock/batches/${batch.id}`}
                       />
-                      {batch.currentQuantity > 0 &&
-                        batchStatus.text !== "Expiré" && ( // Can only exit stock if available and not expired
-                          <RecordStockExitDialog
-                            batches={allActiveBatches} // Pass all active for context if needed, or just this one
-                            initialBatchId={batch.id}
-                            singleBatchMode={true}
-                            trigger={
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                title="Enregistrer une Sortie"
-                              >
-                                <MinusCircle className="h-4 w-4 text-red-500" />
-                              </Button>
-                            }
-                          />
-                        )}
+                      {batch.currentQuantity > 0 && (
+                        <AddStockExitDialog
+                          batches={allActiveBatches}
+                          initialBatchId={batch.id}
+                          singleBatchMode={true}
+                          trigger={
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              title="Enregistrer une Sortie"
+                            >
+                              <MinusCircle className="h-4 w-4 text-red-500" />
+                            </Button>
+                          }
+                        />
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
