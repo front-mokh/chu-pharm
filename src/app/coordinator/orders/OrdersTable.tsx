@@ -10,15 +10,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
 import TableWrapper from "@/components/custom/TableWrapper";
 import UpdateAction from "@/components/custom/UpdateAction";
 import DeleteAction from "@/components/custom/DeleteAction";
-
+import ViewAction from "@/components/custom/ViewAction";
 import { Order, OrderItem, Medication, OrderStatus } from "@/generated/prisma";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import DeleteOrderDialog from "./DeleteOrderDialog";
-
 
 interface OrdersTableProps {
   orders: Array<Order & { orderItems: (OrderItem & { medication: Medication })[] }>;
@@ -47,6 +49,8 @@ const statusBadgeColor: Record<OrderStatus, string> = {
 };
 
 export default function OrdersTable({ orders }: OrdersTableProps) {
+  const router = useRouter();
+
   if (!orders) {
     return (
       <div className="text-center py-8">
@@ -54,6 +58,10 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
       </div>
     );
   }
+
+  const handleViewOrder = (orderId: string) => {
+    router.push(`/coordinator/orders/${orderId}`);
+  };
 
   return (
     <TableWrapper>
@@ -65,7 +73,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
             <TableHead>État</TableHead>
             <TableHead>Articles</TableHead>
             <TableHead>Remarques</TableHead>
-            <TableHead className="text-right w-[100px]">Actions</TableHead>
+            <TableHead className="text-right w-[150px]">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -93,12 +101,28 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                   </Badge>
                 </TableCell>
                 <TableCell>{order.orderItems.length}</TableCell>
-                <TableCell>{order.notes || "—"}</TableCell>
+                <TableCell className="max-w-[200px] truncate">
+                  {order.notes || "—"}
+                </TableCell>
                 <TableCell className="text-right">
-                  <div className="flex justify-end space-x-2">
+                  <div className="flex justify-end space-x-1">
+                    {/* <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleViewOrder(order.id)}
+                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                      title="Voir les détails"
+                    >
+                      <Eye className="w-4 h-4" />
+                    </Button> */}
+                    <ViewAction href={`/coordinator/orders/${order.id}`} />
+                    {order.status === "DRAFT" && (
+                      <UpdateAction href={`/coordinator/orders/${order.id}/edit`} />
+                    )}
                     
-                    <UpdateAction href={`/coordinator/orders/${order.id}/edit`} />
-                    <DeleteOrderDialog trigger={<DeleteAction />} order={order} />
+                    {order.status === "DRAFT" && (
+                      <DeleteOrderDialog trigger={<DeleteAction />} order={order} />
+                    )}
                   </div>
                 </TableCell>
               </TableRow>

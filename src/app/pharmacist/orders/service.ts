@@ -1,19 +1,20 @@
 "use server";
 
-import { OrderValidationFormInput } from "./schemas";
 import {
   Order,
   OrderItem,
   MedicationBatch,
   OrderStatus,
   OrderItemStatus,
+  Medication,
 } from "@/generated/prisma";
 import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
+// Updated interface to match your component's expectations
 export interface OrderForValidation extends Order {
-  service: { name: string };
-  createdBy: { firstName: string; lastName: string };
+  service: { id: string; name: string };
+  createdBy: { id: string; firstName: string; lastName: string };
   orderItems: Array<
     OrderItem & {
       medication: {
@@ -29,61 +30,62 @@ export interface OrderForValidation extends Order {
           >
         >;
       };
-      // For pre-calculating total available stock for display
       totalAvailableStock?: number;
     }
   >;
 }
 
-export async function getPendingOrdersForValidation(): Promise<
-  OrderForValidation[]
-> {
-  const [orders] = await prisma.$transaction([
-    prisma.order.findMany({
-      where: {
-        status: {
-          in: [OrderStatus.SUBMITTED, OrderStatus.PARTIALLY_VALIDATED],
-        },
+// Function to get order with items (matches your component's expectation)
+export async function getOrderWithItems(orderId: string): Promise<OrderForValidation | null> {
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: {
+      service: { 
+        select: { 
+          id: true,
+          name: true 
+        } 
       },
-      include: {
-        service: { select: { name: true } },
-        createdBy: { select: { firstName: true, lastName: true } }, // Renamed from createdBy for clarity
-        orderItems: {
-          include: {
-            medication: {
-              select: {
-                id: true,
-                commercialName: true,
-                dci: true,
-                form: true,
-                dosage: true,
-                batches: {
-                  // Fetch batches to calculate available stock
-                  where: {
-                    currentQuantity: { gt: 0 },
-                    expirationDate: { gte: new Date() },
-                  }, // Only non-expired with stock
-                  orderBy: { expirationDate: "asc" }, // Prioritize soon-to-expire
+      createdBy: { 
+        select: { 
+          id: true,
+          firstName: true, 
+          lastName: true 
+        } 
+      },
+      orderItems: {
+        include: {
+          medication: {
+            select: {
+              id: true,
+              commercialName: true,
+              dci: true,
+              form: true,
+              dosage: true,
+              batches: {
+                where: {
+                  currentQuantity: { gt: 0 },
+                  expirationDate: { gte: new Date() },
                 },
+                orderBy: { expirationDate: "asc" },
+                select: {
+                  id: true,
+                  batchNumber: true,
+                  expirationDate: true,
+                  currentQuantity: true,
+                }
               },
             },
           },
-          orderBy: { createdAt: "asc" },
         },
+        orderBy: { createdAt: "asc" },
       },
-      orderBy: { createdAt: "asc" },
-    }),
-    prisma.order.count({
-      where: {
-        status: {
-          in: [OrderStatus.SUBMITTED, OrderStatus.PARTIALLY_VALIDATED],
-        },
-      },
-    }),
-  ]);
+    },
+  });
 
-  // Calculate total available stock for each medication item for display purposes
-  const ordersWithStock = orders.map((order) => ({
+  if (!order) return null;
+
+  return {
     ...order,
     orderItems: order.orderItems.map((item) => ({
       ...item,
@@ -92,20 +94,48 @@ export async function getPendingOrdersForValidation(): Promise<
         0
       ),
     })),
-  }));
-
-  return ordersWithStock;
+  };
 }
 
-export async function getOrderForValidationById(
-  orderId: string
-): Promise<OrderForValidation | null> {
-  // const user = await ensurePharmacist();
-  const order = await prisma.order.findUnique({
-    where: { id: orderId },
+// Get all medications function (for your component)
+export async function getAllMedications(): Promise<Medication[]> {
+  return await prisma.medication.findMany({
+    where: { isActive: true },
+    orderBy: { commercialName: "asc" },
     include: {
-      service: { select: { name: true } },
-      createdBy: { select: { firstName: true, lastName: true } },
+      therapeuticClass: true,
+      subClass: true,
+      batches: {
+        where: {
+          currentQuantity: { gt: 0 },
+          expirationDate: { gte: new Date() },
+        },
+      },
+    },
+  });
+}
+
+export async function getPendingOrdersForValidation(): Promise<OrderForValidation[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      status: {
+        in: [OrderStatus.SUBMITTED, OrderStatus.PARTIALLY_VALIDATED],
+      },
+    },
+    include: {
+      service: { 
+        select: { 
+          id: true,
+          name: true 
+        } 
+      },
+      createdBy: { 
+        select: { 
+          id: true,
+          firstName: true, 
+          lastName: true 
+        } 
+      },
       orderItems: {
         include: {
           medication: {
@@ -128,16 +158,10 @@ export async function getOrderForValidationById(
         orderBy: { createdAt: "asc" },
       },
     },
+    orderBy: { createdAt: "asc" },
   });
 
-  if (!order) return null;
-  // Ensure only pharmacists can access orders needing their attention
-  // if (order.status !== OrderStatus.SUBMITTED && order.status !== OrderStatus.PARTIALLY_VALIDATED && user.role !== UserRole.ADMIN) {
-  //   // Allow admin to view any order, but pharmacist only those needing validation
-  //   throw new Error("Order not available for validation or access denied.");
-  // }
-
-  return {
+  return orders.map((order) => ({
     ...order,
     orderItems: order.orderItems.map((item) => ({
       ...item,
@@ -146,155 +170,332 @@ export async function getOrderForValidationById(
         0
       ),
     })),
-  };
+  }));
 }
 
-export async function processOrderValidation(
-  formData: OrderValidationFormInput,
-  validatedByUserId: string
+// Fixed validation function
+export async function validateOrder(
+  orderId: string,
+  validatedByUserId: string,
+  validatedItems: Array<{
+    id: string;
+    validatedQuantity: number;
+    status: OrderItemStatus;
+  }>
 ) {
-  // const user = await ensurePharmacist(); // user.id will be validatedByUserId
-  // if (user.id !== validatedByUserId) throw new Error("User ID mismatch.");
-
-  const { orderId, items: validatedItems, overallNotes } = formData;
-
-  return await prisma.$transaction(async (tx) => {
-    const order = await tx.order.findUnique({
-      where: { id: orderId },
-      include: { orderItems: { include: { medication: true } } },
-    });
-
-    if (!order) throw new Error("Commande non trouvée.");
-    if (
-      order.status !== OrderStatus.SUBMITTED &&
-      order.status !== OrderStatus.PARTIALLY_VALIDATED
-    ) {
-      throw new Error("Cette commande n'est plus en attente de validation.");
-    }
-
-    let allItemsFullyValidated = true;
-    let anyItemValidated = false;
-    let allItemsProcessed = true; // Assume all items in form are all items in order
-
-    for (const validatedItem of validatedItems) {
-      const dbItem = order.orderItems.find(
-        (i) => i.id === validatedItem.orderItemId
-      );
-      if (!dbItem)
-        throw new Error(
-          `Article de commande ${validatedItem.orderItemId} non trouvé.`
-        );
-
-      let newValidatedQuantity = validatedItem.validatedQuantity;
-
-      if (validatedItem.status === OrderItemStatus.NOT_AVAILABLE) {
-        newValidatedQuantity = 0; // Ensure quantity is 0 if not available
-      } else if (validatedItem.status === OrderItemStatus.PENDING) {
-        allItemsProcessed = false; // An item is still pending
-        allItemsFullyValidated = false;
-        // Keep existing validated quantity if any, or null
-        newValidatedQuantity = dbItem.validatedQuantity ?? undefined;
-      } else {
-        // VALIDATED or PARTIALLY_VALIDATED
-        if (
-          newValidatedQuantity === undefined ||
-          newValidatedQuantity === null
-        ) {
-          throw new Error(
-            `Quantité validée manquante pour l'article ${dbItem.medication.commercialName} avec statut ${validatedItem.status}`
-          );
-        }
-        if (newValidatedQuantity > dbItem.requestedQuantity) {
-          throw new Error(
-            `La quantité validée (${newValidatedQuantity}) pour ${dbItem.medication.commercialName} ne peut excéder la quantité demandée (${dbItem.requestedQuantity}).`
-          );
-        }
-        anyItemValidated = true;
-        if (
-          newValidatedQuantity < dbItem.requestedQuantity ||
-          validatedItem.status === OrderItemStatus.PARTIALLY_VALIDATED
-        ) {
-          allItemsFullyValidated = false;
-        }
-      }
-
-      await tx.orderItem.update({
-        where: { id: validatedItem.orderItemId },
-        data: {
-          validatedQuantity: newValidatedQuantity,
-          status: validatedItem.status,
-          notes: validatedItem.notes, // Pharmacist's notes for the item
+  try {
+    return await prisma.$transaction(async (tx) => {
+      // Get the order with current items
+      const order = await tx.order.findUnique({
+        where: { id: orderId },
+        include: { 
+          orderItems: { 
+            include: { 
+              medication: {
+                select: {
+                  id: true,
+                  commercialName: true,
+                  dci: true,
+                }
+              } 
+            } 
+          } 
         },
       });
-    }
 
-    // Determine overall order status
-    let newOrderStatus: OrderStatus = order.status; // Default to current
-    if (allItemsProcessed) {
-      if (allItemsFullyValidated && anyItemValidated) {
+      if (!order) {
+        return { success: false, error: "Commande non trouvée." };
+      }
+
+      // Check if order can be validated
+      if (![OrderStatus.SUBMITTED, OrderStatus.PARTIALLY_VALIDATED].includes(order.status)) {
+        return { 
+          success: false, 
+          error: "Cette commande n'est plus en attente de validation." 
+        };
+      }
+
+      // Validate each item
+      const itemValidationResults = [];
+      
+      for (const validatedItem of validatedItems) {
+        const dbItem = order.orderItems.find((i) => i.id === validatedItem.id);
+        if (!dbItem) {
+          return { 
+            success: false, 
+            error: `Article de commande ${validatedItem.id} non trouvé.` 
+          };
+        }
+
+        let newValidatedQuantity = validatedItem.validatedQuantity;
+        let newStatus = validatedItem.status;
+
+        // Handle different statuses
+        if (newStatus === OrderItemStatus.NOT_AVAILABLE) {
+          newValidatedQuantity = 0;
+        } else {
+          // Validate quantity constraints
+          if (newValidatedQuantity < 0) {
+            return { 
+              success: false, 
+              error: `La quantité validée pour ${dbItem.medication.commercialName} ne peut être négative.` 
+            };
+          }
+          
+          if (newValidatedQuantity > dbItem.requestedQuantity) {
+            return { 
+              success: false, 
+              error: `La quantité validée (${newValidatedQuantity}) pour ${dbItem.medication.commercialName} ne peut excéder la quantité demandée (${dbItem.requestedQuantity}).` 
+            };
+          }
+
+          // Determine status based on quantity
+          if (newValidatedQuantity === 0) {
+            newStatus = OrderItemStatus.NOT_AVAILABLE;
+          } else if (newValidatedQuantity < dbItem.requestedQuantity) {
+            newStatus = OrderItemStatus.PARTIALLY_VALIDATED;
+          } else {
+            newStatus = OrderItemStatus.VALIDATED;
+          }
+        }
+
+        // Update the order item
+        await tx.orderItem.update({
+          where: { id: validatedItem.id },
+          data: {
+            validatedQuantity: newValidatedQuantity,
+            status: newStatus,
+          },
+        });
+
+        itemValidationResults.push({
+          id: validatedItem.id,
+          requestedQuantity: dbItem.requestedQuantity,
+          validatedQuantity: newValidatedQuantity,
+          status: newStatus,
+        });
+      }
+
+      // Determine overall order status
+      const totalItemsValidated = itemValidationResults.filter(
+        item => item.status === OrderItemStatus.VALIDATED
+      ).length;
+      
+      const totalItemsPartiallyValidated = itemValidationResults.filter(
+        item => item.status === OrderItemStatus.PARTIALLY_VALIDATED
+      ).length;
+      
+      const totalItemsNotAvailable = itemValidationResults.filter(
+        item => item.status === OrderItemStatus.NOT_AVAILABLE
+      ).length;
+
+      const totalItems = itemValidationResults.length;
+
+      let newOrderStatus: OrderStatus;
+      
+      if (totalItemsValidated === totalItems) {
+        // All items fully validated
         newOrderStatus = OrderStatus.VALIDATED;
-      } else if (anyItemValidated) {
-        // Some items validated, some not fully or N/A
+      } else if (totalItemsNotAvailable === totalItems) {
+        // All items not available - still partially validated (not cancelled)
+        newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
+      } else if (totalItemsValidated > 0 || totalItemsPartiallyValidated > 0) {
+        // Some items validated or partially validated
         newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
       } else {
-        // No items were actually validated (e.g., all marked N/A or kept PENDING)
-        // If all items are N/A or PENDING, status might remain SUBMITTED or become something like 'REVIEWED_NO_STOCK'
-        // For now, if nothing is validated, it remains as is or becomes PARTIALLY_VALIDATED if at least one action was taken.
-        // This logic might need refinement based on exact business rules.
-        if (
-          validatedItems.every(
-            (item) => item.status === OrderItemStatus.NOT_AVAILABLE
-          )
-        ) {
-          newOrderStatus = OrderStatus.PARTIALLY_VALIDATED; // Or a custom status
-        } else if (
-          validatedItems.some(
-            (item) => item.status === OrderItemStatus.PENDING
-          ) &&
-          !anyItemValidated
-        ) {
-          newOrderStatus = OrderStatus.SUBMITTED; // No actual validation action taken, still needs work
-        } else {
-          newOrderStatus = OrderStatus.PARTIALLY_VALIDATED; // Default for mixed scenarios
-        }
+        // Fallback
+        newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
       }
-    } else {
-      // Not all items processed (some left PENDING)
-      newOrderStatus = OrderStatus.PARTIALLY_VALIDATED; // Or could remain SUBMITTED if no positive validation
-    }
 
-    await tx.order.update({
-      where: { id: orderId },
-      data: {
-        status: newOrderStatus,
-        validatedAt:
-          newOrderStatus === OrderStatus.VALIDATED ||
-          newOrderStatus === OrderStatus.PARTIALLY_VALIDATED
-            ? new Date()
-            : order.validatedAt,
-        validatedById:
-          newOrderStatus === OrderStatus.VALIDATED ||
-          newOrderStatus === OrderStatus.PARTIALLY_VALIDATED
-            ? validatedByUserId
-            : order.validatedById,
-        notes: overallNotes
-          ? order.notes
-            ? `${order.notes}\nValidation: ${overallNotes}`
-            : `Validation: ${overallNotes}`
-          : order.notes,
-      },
+      // Update the order
+      await tx.order.update({
+        where: { id: orderId },
+        data: {
+          status: newOrderStatus,
+          validatedAt: new Date(),
+          validatedById: validatedByUserId,
+        },
+      });
+
+      // Revalidate paths
+      revalidatePath(`/dashboard/pharmacist/orders/pending`);
+      revalidatePath(`/dashboard/pharmacist/orders/${orderId}/validate`);
+      revalidatePath("/dashboard/pharmacist/dashboard");
+
+      // Return success with detailed information
+      return {
+        success: true,
+        message: `Validation terminée. ${totalItemsValidated} article(s) validé(s), ${totalItemsPartiallyValidated} partiellement validé(s), ${totalItemsNotAvailable} non disponible(s).`,
+        newStatus: newOrderStatus,
+        itemResults: itemValidationResults,
+      };
     });
-
-    // TODO: Potentially create Alerts based on validation (e.g., item not available)
-
-    revalidatePath(`/dashboard/pharmacist/orders/pending`);
-    revalidatePath(`/dashboard/pharmacist/orders/${orderId}/validate`);
-    revalidatePath("/dashboard/pharmacist/dashboard"); // Revalidate dashboard stats
-
-    return {
-      success: true,
-      message: "Validation de la commande traitée.",
-      newStatus: newOrderStatus,
+  } catch (error) {
+    console.error("Error validating order:", error);
+    return { 
+      success: false, 
+      error: "Erreur lors de la validation de la commande. Veuillez réessayer." 
     };
-  });
+  }
+}
+
+// Alternative validation function with notes support
+export async function validateOrderWithNotes(
+  orderId: string,
+  validatedByUserId: string,
+  validatedItems: Array<{
+    id: string;
+    validatedQuantity: number;
+    status: OrderItemStatus;
+    notes?: string;
+  }>,
+  overallNotes?: string
+) {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const order = await tx.order.findUnique({
+        where: { id: orderId },
+        include: { 
+          orderItems: { 
+            include: { 
+              medication: {
+                select: {
+                  id: true,
+                  commercialName: true,
+                  dci: true,
+                }
+              } 
+            } 
+          } 
+        },
+      });
+
+      if (!order) {
+        return { success: false, error: "Commande non trouvée." };
+      }
+
+      if (![OrderStatus.SUBMITTED, OrderStatus.PARTIALLY_VALIDATED].includes(order.status)) {
+        return { 
+          success: false, 
+          error: "Cette commande n'est plus en attente de validation." 
+        };
+      }
+
+      const itemValidationResults = [];
+      
+      for (const validatedItem of validatedItems) {
+        const dbItem = order.orderItems.find((i) => i.id === validatedItem.id);
+        if (!dbItem) {
+          return { 
+            success: false, 
+            error: `Article de commande ${validatedItem.id} non trouvé.` 
+          };
+        }
+
+        let newValidatedQuantity = validatedItem.validatedQuantity;
+        let newStatus = validatedItem.status;
+
+        if (newStatus === OrderItemStatus.NOT_AVAILABLE) {
+          newValidatedQuantity = 0;
+        } else {
+          if (newValidatedQuantity < 0) {
+            return { 
+              success: false, 
+              error: `La quantité validée pour ${dbItem.medication.commercialName} ne peut être négative.` 
+            };
+          }
+          
+          if (newValidatedQuantity > dbItem.requestedQuantity) {
+            return { 
+              success: false, 
+              error: `La quantité validée (${newValidatedQuantity}) pour ${dbItem.medication.commercialName} ne peut excéder la quantité demandée (${dbItem.requestedQuantity}).` 
+            };
+          }
+
+          if (newValidatedQuantity === 0) {
+            newStatus = OrderItemStatus.NOT_AVAILABLE;
+          } else if (newValidatedQuantity < dbItem.requestedQuantity) {
+            newStatus = OrderItemStatus.PARTIALLY_VALIDATED;
+          } else {
+            newStatus = OrderItemStatus.VALIDATED;
+          }
+        }
+
+        await tx.orderItem.update({
+          where: { id: validatedItem.id },
+          data: {
+            validatedQuantity: newValidatedQuantity,
+            status: newStatus,
+            notes: validatedItem.notes,
+          },
+        });
+
+        itemValidationResults.push({
+          id: validatedItem.id,
+          requestedQuantity: dbItem.requestedQuantity,
+          validatedQuantity: newValidatedQuantity,
+          status: newStatus,
+        });
+      }
+
+      // Determine overall order status
+      const totalItemsValidated = itemValidationResults.filter(
+        item => item.status === OrderItemStatus.VALIDATED
+      ).length;
+      
+      const totalItemsPartiallyValidated = itemValidationResults.filter(
+        item => item.status === OrderItemStatus.PARTIALLY_VALIDATED
+      ).length;
+      
+      const totalItemsNotAvailable = itemValidationResults.filter(
+        item => item.status === OrderItemStatus.NOT_AVAILABLE
+      ).length;
+
+      const totalItems = itemValidationResults.length;
+
+      let newOrderStatus: OrderStatus;
+      
+      if (totalItemsValidated === totalItems) {
+        newOrderStatus = OrderStatus.VALIDATED;
+      } else if (totalItemsNotAvailable === totalItems) {
+        newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
+      } else if (totalItemsValidated > 0 || totalItemsPartiallyValidated > 0) {
+        newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
+      } else {
+        newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
+      }
+
+      // Update order with notes
+      const updatedNotes = overallNotes 
+        ? (order.notes ? `${order.notes}\n\nValidation: ${overallNotes}` : `Validation: ${overallNotes}`)
+        : order.notes;
+
+      await tx.order.update({
+        where: { id: orderId },
+        data: {
+          status: newOrderStatus,
+          validatedAt: new Date(),
+          validatedById: validatedByUserId,
+          notes: updatedNotes,
+        },
+      });
+
+      revalidatePath(`/dashboard/pharmacist/orders/pending`);
+      revalidatePath(`/dashboard/pharmacist/orders/${orderId}/validate`);
+      revalidatePath("/dashboard/pharmacist/dashboard");
+
+      return {
+        success: true,
+        message: `Validation terminée. ${totalItemsValidated} article(s) validé(s), ${totalItemsPartiallyValidated} partiellement validé(s), ${totalItemsNotAvailable} non disponible(s).`,
+        newStatus: newOrderStatus,
+        itemResults: itemValidationResults,
+      };
+    });
+  } catch (error) {
+    console.error("Error validating order with notes:", error);
+    return { 
+      success: false, 
+      error: "Erreur lors de la validation de la commande. Veuillez réessayer." 
+    };
+  }
 }

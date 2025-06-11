@@ -126,23 +126,13 @@ export function AppSidebar({
       links = [
         {
           title: "Dashboard",
-          url: "/service-coordinator/dashboard",
+          url: "/coordinator/dashboard",
           icon: LayoutDashboard,
         },
         {
           title: "Orders",
           url: "/coordinator/orders",
           icon: Tags,
-        },
-        {
-          title: "Services",
-          url: "/coordinator/services",
-          icon: Inbox,
-        },
-        {
-          title: "Fournisseurs",
-          url: "/service-coordinator/suppliers",
-          icon: Contact,
         },
       ];
       break;

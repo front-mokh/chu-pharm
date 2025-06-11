@@ -89,7 +89,7 @@ export default function PendingOrdersTable({
                 <TableCell className="text-right">
                   <Button asChild variant="outline" size="sm">
                     <Link
-                      href={`/dashboard/pharmacist/orders/${order.id}/validate`}
+                      href={`/pharmacist/orders/${order.id}/validate`}
                     >
                       <Eye className="mr-2 h-4 w-4" /> Valider / Voir
                     </Link>
