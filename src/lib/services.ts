@@ -125,6 +125,7 @@ export async function createUser(data: CreateUserInput) {
     });
 
     revalidatePath("/admin/users");
+    revalidatePath("/admin/dashboard");
     return { success: true, data: user };
   } catch (error) {
     console.error("Error creating user:", error);
@@ -194,7 +195,7 @@ export async function getAllUsers() {
     await getSessionOrThrow();
 
     const users = await prisma.user.findMany({
-      orderBy: { lastName: "asc" },
+      orderBy: { createdAt: "desc" },
     });
 
     return users;
@@ -229,6 +230,7 @@ export async function createService(data: CreateServiceInput) {
     });
 
     revalidatePath("/admin/services");
+    revalidatePath("/admin/dashboard");
     return { success: true, data: service };
   } catch (error) {
     console.error("Error creating service:", error);
@@ -296,7 +298,7 @@ export async function getAllServices() {
     await getSessionOrThrow();
 
     const services = await prisma.service.findMany({
-      orderBy: { name: "asc" },
+      orderBy: { createdAt: "desc" },
     });
 
     return services;
