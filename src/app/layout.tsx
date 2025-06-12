@@ -2,15 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { Geist, Geist_Mono } from "next/font/google";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { Toaster } from "sonner";
-import { AppSidebar } from "@/components/app-sidebar";
-import { auth } from "../../auth";
-import { getUserRole } from "../../prisma/db";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,40 +18,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
-
-  // console.log("THE OUTER LAYOUT IS RUNNING");
-
-  const role = session
-    ? await getUserRole(session?.user?.id as string)
-    : undefined;
-
   return (
     <html>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SidebarProvider>
-          <AppSidebar role={role} />
-          <SidebarInset>
-            <header className="flex h-14 shrink-0 items-center gap-2 bg-white border-b">
-              <div className="flex flex-1 justify-between items-center gap-2 px-3">
-                <SidebarTrigger />
-                {/* <UserDropdownMenu /> */}
-              </div>
-              <div className="ml-auto px-3"></div>
-            </header>
-            <SessionProvider>
-              <div className="p-6 h-full bg-[#EEF2F6]">{children}</div>
-              <Toaster />
-            </SessionProvider>
-          </SidebarInset>
-        </SidebarProvider>
+        <SessionProvider>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

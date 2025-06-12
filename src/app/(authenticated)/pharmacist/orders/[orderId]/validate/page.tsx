@@ -1,7 +1,7 @@
 import { getOrderWithItems } from "../../service";
 import ValidateOrderPage from "./ValidateOrderPage";
 import { unstable_noStore as noStore } from "next/cache";
-import { auth } from "../../../../../../auth";
+import { auth } from "../../../../../../../auth";
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { UserRole } from "@/generated/prisma";

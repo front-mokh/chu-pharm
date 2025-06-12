@@ -1,5 +1,5 @@
 import { getOrderWithItems } from "../../service";
-import { getAllMedications } from "@/app/pharmacist/medications/service";
+import { getAllMedications } from "@/app/(authenticated)/pharmacist/medications/service";
 import UpdateOrderPage from "./UpdateOrderPage";
 import { unstable_noStore as noStore } from "next/cache";
 

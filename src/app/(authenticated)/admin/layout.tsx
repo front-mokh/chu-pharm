@@ -1,6 +1,6 @@
-import { auth } from "../../../auth";
+import { auth } from "../../../../auth";
 import { redirect } from "next/navigation";
-import { getUserRole } from "../../../prisma/db";
+import { getUserRole } from "../../../../prisma/db";
 
 export default async function RootLayout({
   children,
