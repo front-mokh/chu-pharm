@@ -2,17 +2,19 @@ import { getOrderWithItems } from "../../service";
 import ValidateOrderPage from "./ValidateOrderPage";
 import { unstable_noStore as noStore } from "next/cache";
 import { auth } from "../../../../../../../auth";
-import { prisma } from "@/lib/db";
+import { prisma } from "../../../../../../lib/db";
 import { notFound } from "next/navigation";
 import { UserRole } from "@/generated/prisma";
 
+import React from "react";
+
 interface Props {
-  params: { id?: string };
+  params: { orderId?: string }; // Changed from 'id' to 'orderId'
 }
 
 export default async function ValidateOrderPageServer({ params }: Props) {
   // 1. Retrieve and validate parameter
-  const orderId = params.id;
+  const orderId = params.orderId; // Changed from params.id to params.orderId
   if (!orderId) {
     notFound();
   }
@@ -21,6 +23,7 @@ export default async function ValidateOrderPageServer({ params }: Props) {
 
   // 2. Authentication
   const session = await auth();
+  console.log("session", session);
   const userId = session?.user?.id;
   if (!userId) {
     return (
@@ -82,14 +85,14 @@ export default async function ValidateOrderPageServer({ params }: Props) {
   }
 
   // 6. Check service membership (only if user is not admin)
-  if (user.role !== UserRole.ADMIN && order.service.id !== user.serviceId) {
+  if (user.role !== UserRole.ADMIN && user.role !== UserRole.PHARMACIST && order.service.id !== user.serviceId) {
     return (
       <div className="p-6 text-center text-red-600">
         <h2 className="text-xl font-semibold text-gray-800 mb-2">
           Accès non autorisé
         </h2>
         <p className="text-gray-600">
-          Cette commande n'appartient pas à votre service.
+          Cette commande n&apos;appartient pas à votre service.
         </p>
       </div>
     );

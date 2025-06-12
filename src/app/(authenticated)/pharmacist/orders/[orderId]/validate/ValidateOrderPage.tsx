@@ -21,28 +21,49 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import NumberField from "@/components/custom/NumberField";
+} from "../../../../../../components/ui/card";
+import { Button } from "../../../../../../components/ui/button";
+import { Form } from "../../../../../../components/ui/form";
+import NumberField from "../../../../../../components/custom/NumberField";
 import {
   Select,
   SelectTrigger,
   SelectContent,
   SelectItem,
   SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+} from "../../../../../../components/ui/select";
+import { Badge } from "../../../../../../components/ui/badge";
+import { Alert, AlertTitle, AlertDescription } from "../../../../../../components/ui/alert";
 
 import {
   Medication,
   Order,
   OrderItem,
   OrderItemStatus,
-} from "@/generated/prisma";
+} from "../../../../../../generated/prisma";
 import { validateOrder } from "../../service";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "../../../../../../lib/utils";
+
+// Enhanced type definitions
+interface MedicationWithBatches extends Medication {
+  batches: Array<{
+    id: string;
+    batchNumber: string;
+    expirationDate: Date;
+    currentQuantity: number;
+  }>;
+}
+
+interface OrderItemWithMedication extends OrderItem {
+  medication: MedicationWithBatches;
+  totalAvailableStock: number;
+}
+
+interface OrderWithDetails extends Order {
+  orderItems: OrderItemWithMedication[];
+  service: { id: string; name: string };
+  createdBy: { id: string; firstName: string; lastName: string };
+}
 
 const validateOrderSchema = z.object({
   validatedItems: z
@@ -64,24 +85,156 @@ const validateOrderSchema = z.object({
 type ValidateOrderFormInput = z.infer<typeof validateOrderSchema>;
 
 interface ValidateOrderPageProps {
-  order: Order & {
-    orderItems: Array<
-      OrderItem & {
-        medication: Medication & {
-          batches?: Array<{
-            id: string;
-            batchNumber: string;
-            expirationDate: Date;
-            currentQuantity: number;
-          }>;
-        };
-        totalAvailableStock?: number;
-      }
-    >;
-    service: { id: string; name: string };
-    createdBy: { id: string; firstName: string; lastName: string };
-  };
+  order: OrderWithDetails;
   pharmacistId: string;
+}
+
+// Separate component for order item validation
+interface OrderItemValidationProps {
+  field: {
+    id: string;
+    medicationId: string;
+    requestedQuantity: number;
+    validatedQuantity: number;
+    status: OrderItemStatus;
+    medicationName: string;
+  };
+  index: number;
+  orderItem: OrderItemWithMedication;
+  form: any;
+  onStatusChange: (index: number, newStatus: OrderItemStatus) => void;
+  onRemove: (index: number) => void;
+}
+
+function OrderItemValidation({
+  field,
+  index,
+  orderItem,
+  form,
+  onStatusChange,
+  onRemove,
+}: OrderItemValidationProps) {
+  const availableStock = orderItem.totalAvailableStock || 0;
+
+  const getItemStatusBadge = (status: OrderItemStatus) => {
+    switch (status) {
+      case OrderItemStatus.VALIDATED:
+        return <Badge className="bg-green-100 text-green-700">Validé</Badge>;
+      case OrderItemStatus.PARTIALLY_VALIDATED:
+        return (
+          <Badge className="bg-yellow-100 text-yellow-700">
+            Partiellement validé
+          </Badge>
+        );
+      case OrderItemStatus.NOT_AVAILABLE:
+        return <Badge className="bg-red-100 text-red-700">Non disponible</Badge>;
+      default:
+        return <Badge variant="secondary">{status}</Badge>;
+    }
+  };
+
+  return (
+    <div className="border border-gray-200 p-4 rounded-md bg-white">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+        {/* Médicament info */}
+        <div className="lg:col-span-4">
+          <label className="text-sm font-medium text-gray-700 mb-2 block">
+            Médicament
+          </label>
+          <div className="flex justify-between">
+            <span className="text-sm text-gray-900">
+              {field.medicationName}
+            </span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() =>
+                toast.info("Détails du médicament – À implémenter")
+              }
+            >
+              <Eye className="w-4 h-4" />
+            </Button>
+          </div>
+          <div className="text-xs text-gray-500 mt-1">
+            Stock disponible: {availableStock}
+          </div>
+        </div>
+
+        {/* Quantités */}
+        <div className="lg:col-span-2">
+          <label className="text-sm font-medium text-gray-700 mb-2 block">
+            Quantité demandée
+          </label>
+          <div className="p-2 bg-gray-50 rounded text-center">
+            {field.requestedQuantity}
+          </div>
+        </div>
+        <div className="lg:col-span-2">
+          <NumberField
+            control={form.control}
+            name={`validatedItems.${index}.validatedQuantity`}
+            label="Quantité validée"
+            min={0}
+            max={Math.min(field.requestedQuantity, availableStock)}
+          />
+        </div>
+
+        {/* Statut */}
+        <div className="lg:col-span-3">
+          <label className="text-sm font-medium text-gray-700 mb-2 block">
+            Statut
+          </label>
+          <Select
+            value={form.watch(`validatedItems.${index}.status`)}
+            onValueChange={(val) =>
+              onStatusChange(index, val as OrderItemStatus)
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={OrderItemStatus.VALIDATED}>
+                Validé
+              </SelectItem>
+              <SelectItem value={OrderItemStatus.PARTIALLY_VALIDATED}>
+                Partiellement validé
+              </SelectItem>
+              <SelectItem value={OrderItemStatus.NOT_AVAILABLE}>
+                Non disponible
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Supprimer */}
+        <div className="lg:col-span-1 flex items-end justify-end">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => onRemove(index)}
+          >
+            <Trash2 className="w-4 h-4 text-red-500" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Avertissement stock & badge */}
+      <div className="mt-3 flex justify-between">
+        {availableStock < field.requestedQuantity && (
+          <div className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+            ⚠️ Stock insuffisant ({availableStock} dispo,{" "}
+            {field.requestedQuantity} demandé)
+          </div>
+        )}
+        <div>
+          {getItemStatusBadge(form.watch(`validatedItems.${index}.status`))}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function ValidateOrderPage({
@@ -130,7 +283,7 @@ export default function ValidateOrderPage({
         setTimeout(() => {
           router.push("/dashboard/pharmacist/orders");
           router.refresh();
-        }, 1_000);
+        }, 1000);
       } else {
         toast.error(result.error || "Erreur lors de la validation.");
       }
@@ -142,10 +295,7 @@ export default function ValidateOrderPage({
     }
   };
 
-  const handleStatusChange = (
-    index: number,
-    newStatus: OrderItemStatus
-  ) => {
+  const handleStatusChange = (index: number, newStatus: OrderItemStatus) => {
     const current = form.getValues(`validatedItems.${index}`);
     if (newStatus === OrderItemStatus.NOT_AVAILABLE) {
       form.setValue(`validatedItems.${index}.validatedQuantity`, 0);
@@ -169,25 +319,6 @@ export default function ValidateOrderPage({
         i.status === OrderItemStatus.NOT_AVAILABLE ||
         i.validatedQuantity < i.requestedQuantity
     );
-  };
-
-  const getAvailableStock = (oi: any) => oi.totalAvailableStock || 0;
-
-  const getItemStatusBadge = (status: OrderItemStatus) => {
-    switch (status) {
-      case OrderItemStatus.VALIDATED:
-        return <Badge className="bg-green-100 text-green-700">Validé</Badge>;
-      case OrderItemStatus.PARTIALLY_VALIDATED:
-        return (
-          <Badge className="bg-yellow-100 text-yellow-700">
-            Partiellement validé
-          </Badge>
-        );
-      case OrderItemStatus.NOT_AVAILABLE:
-        return <Badge className="bg-red-100 text-red-700">Non disponible</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
   };
 
   return (
@@ -240,124 +371,23 @@ export default function ValidateOrderPage({
 
               <div className="space-y-4">
                 {fields.map((field, idx) => {
-                  const oi = order.orderItems.find((i) => i.id === field.id)!;
-                  const avail = getAvailableStock(oi);
+                  const orderItem = order.orderItems.find((i) => i.id === field.id);
+                  
+                  if (!orderItem) {
+                    console.error(`Order item not found for id: ${field.id}`);
+                    return null;
+                  }
 
                   return (
-                    <div
+                    <OrderItemValidation
                       key={field.id}
-                      className="border border-gray-200 p-4 rounded-md bg-white"
-                    >
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                        {/* Médicament info */}
-                        <div className="lg:col-span-4">
-                          <label className="text-sm font-medium text-gray-700 mb-2 block">
-                            Médicament
-                          </label>
-                          <div className="flex justify-between">
-                            <span className="text-sm text-gray-900">
-                              {field.medicationName}
-                            </span>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                toast.info(
-                                  "Détails du médicament – À implémenter"
-                                )
-                              }
-                            >
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                          </div>
-                          <div className="text-xs text-gray-500 mt-1">
-                            Stock disponible: {avail}
-                          </div>
-                        </div>
-
-                        {/* Quantités */}
-                        <div className="lg:col-span-2">
-                          <label className="text-sm font-medium text-gray-700 mb-2 block">
-                            Quantité demandée
-                          </label>
-                          <div className="p-2 bg-gray-50 rounded text-center">
-                            {field.requestedQuantity}
-                          </div>
-                        </div>
-                        <div className="lg:col-span-2">
-                          <NumberField
-                            control={form.control}
-                            name={`validatedItems.${idx}.validatedQuantity`}
-                            label="Quantité validée"
-                            min={0}
-                            max={Math.min(field.requestedQuantity, avail)}
-                          />
-                        </div>
-
-                        {/* Statut */}
-                        <div className="lg:col-span-3">
-                          <label className="text-sm font-medium text-gray-700 mb-2 block">
-                            Statut
-                          </label>
-                          <Select
-                            value={form.watch(
-                              `validatedItems.${idx}.status`
-                            )}
-                            onValueChange={(val) =>
-                              handleStatusChange(
-                                idx,
-                                val as OrderItemStatus
-                              )
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value={OrderItemStatus.VALIDATED}>
-                                Validé
-                              </SelectItem>
-                              <SelectItem
-                                value={OrderItemStatus.PARTIALLY_VALIDATED}
-                              >
-                                Partiellement validé
-                              </SelectItem>
-                              <SelectItem
-                                value={OrderItemStatus.NOT_AVAILABLE}
-                              >
-                                Non disponible
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        {/* Supprimer */}
-                        <div className="lg:col-span-1 flex items-end justify-end">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => remove(idx)}
-                          >
-                            <Trash2 className="w-4 h-4 text-red-500" />
-                          </Button>
-                        </div>
-                      </div>
-
-                      {/* Avertissement stock & badge */}
-                      <div className="mt-3 flex justify-between">
-                        {avail < field.requestedQuantity && (
-                          <div className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
-                            ⚠️ Stock insuffisant ({avail} dispo,{" "}
-                            {field.requestedQuantity} demandé)
-                          </div>
-                        )}
-                        <div>{getItemStatusBadge(
-                          form.watch(`validatedItems.${idx}.status`)
-                        )}</div>
-                      </div>
-                    </div>
+                      field={field}
+                      index={idx}
+                      orderItem={orderItem}
+                      form={form}
+                      onStatusChange={handleStatusChange}
+                      onRemove={remove}
+                    />
                   );
                 })}
               </div>
