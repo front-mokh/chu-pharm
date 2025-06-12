@@ -1,5 +1,22 @@
-import React from "react";
+import AdminDashboard from './dashboard/AdminDashboard';
+import { auth } from '../../../../auth';
+import { unstable_noStore as noStore } from "next/cache";
 
-export default function AdminPage() {
-  return <div>AdminPage</div>;
+export default async function DashboardPage() {
+  noStore();
+  
+  const session = await auth();
+  const userId = session?.user?.id;
+  
+  if (!userId) {
+    return (
+      <div className="p-4 text-center text-red-600">
+        Utilisateur non authentifié.
+      </div>
+    );
+  }
+
+  return (
+    <AdminDashboard userId={userId} />
+  );
 }

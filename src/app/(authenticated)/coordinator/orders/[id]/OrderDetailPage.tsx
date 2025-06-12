@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
-  ArrowLeft,
+
   Edit,
   Trash2,
   Send,
@@ -14,8 +14,7 @@ import {
   Calendar,
   FileText,
   AlertCircle,
-  ChevronDown,
-  ChevronUp,
+ 
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -48,7 +47,7 @@ import {
   AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 import { Order, OrderItem, Medication, OrderStatus, OrderItemStatus } from "@/generated/prisma";
-import { submitOrder, deleteOrder } from "../service";
+import { submitOrder } from "../service";
 import DeleteOrderDialog from "../DeleteOrderDialog";
 
 interface OrderDetailPageProps {

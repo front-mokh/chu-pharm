@@ -1,7 +1,7 @@
 
-import ServiceCoordinatorDashboard from './ServiceCoordinatorDashboard';
+import ServiceCoordinatorDashboard from './dashboard/ServiceCoordinatorDashboard';
 
-import { auth } from '../../../../../auth';
+import { auth } from "../../../../auth";
 import { prisma } from "@/lib/db";
 import { unstable_noStore as noStore } from "next/cache";
 export default async function DashboardPage() {

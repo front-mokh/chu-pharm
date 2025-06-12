@@ -1,7 +1,7 @@
 import { getOrdersByService } from "./service";
 import OrdersPageClient from "./OrdersPage";
 import { unstable_noStore as noStore } from "next/cache";
-import { auth } from "../../../../auth";
+import { auth } from "../../../../../auth";
 import { prisma } from "@/lib/db";
 
 export default async function OrdersPageServer() {

@@ -104,7 +104,7 @@ export default function UpdateOrderPage({ order, medications }: UpdateOrderPageP
         toast.success("Commande mise à jour avec succès !");
         // Navigate back to order list after a short delay
         setTimeout(() => {
-          router.push("/dashboard/coordinator/orders");
+          router.push("/coordinator/orders");
           router.refresh();
         }, 1000);
       } else {

@@ -43,7 +43,7 @@ export default async function RootLayout({
     case "PHARMACIST":
       redirect("/pharmacist");
     case "SERVICE_COORDINATOR":
-      redirect("/service-coordinator");
+      redirect("/coordinator");
     case "ORDER_PREPARER":
       redirect("/order-preparer");
     default:

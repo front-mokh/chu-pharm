@@ -26,7 +26,7 @@ export default function DeleteOrderDialog({
       if (result.success) {
         onDelete?.();
         showToast("success", "Commande supprimé avec succès");
-        router.refresh(); // Refresh the page data
+        router.push('/coordinator/orders'); // Refresh the page data
       } else {
         showToast(
           "error",

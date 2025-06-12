@@ -5,7 +5,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2, Plus, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import {
@@ -37,7 +37,7 @@ export default function AddOrderPage({
   userId,
 }: AddOrderPageProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+const router = useRouter();
   const form = useForm<OrderFormInput>({
     resolver: zodResolver(orderSchema),
     defaultValues: {
@@ -62,6 +62,7 @@ export default function AddOrderPage({
       const result = await createOrderForService(serviceId, userId, values);
       if (result.success) {
         toast.success("Commande créée avec succès !");
+        router.push('/coordinator/orders'); // Refresh the page data
         form.reset();
       } else {
         toast.error(result.error || "Erreur lors de la création.");

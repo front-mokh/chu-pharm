@@ -1,6 +1,6 @@
 import { getAllMedications } from "../../../pharmacist/medications/service";
 import AddOrderPage from "./addOrderPage";
-import { auth } from "../../../../../auth";
+import { auth } from "../../../../../../auth";
 import { getUserServiceId } from "@/lib/utils";
 import { unstable_noStore as noStore } from "next/cache";
 
