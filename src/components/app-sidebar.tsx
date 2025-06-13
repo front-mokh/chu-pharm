@@ -139,20 +139,20 @@ export function AppSidebar({
         },
         {
           title: "Commandes",
-          url: "/preparator/orders",
+          url: "/coordinator/orders",
           icon: Inbox,
           items: [
             {
               title: "En Attente de Validation",
-              url: "/preparator/orders/validated",
+              url: "/coordinator/orders/pending",
             },
             {
               title: "Deja Validées",
-              url: "/preparator/orders/prepared",
+              url: "/coordinator/orders/validated",
             },
             {
               title: "Anullées",
-              url: "/preparator/orders/delivered",
+              url: "/coordinator/orders/cancelled",
             },
           ],
         },
@@ -166,9 +166,23 @@ export function AppSidebar({
           icon: LayoutDashboard,
         },
         {
-          title: "orders",
+          title: "Commandes",
           url: "/preparator/orders",
-          icon: UsersRound,
+          icon: Inbox,
+          items: [
+            {
+              title: "Deja Validées",
+              url: "/preparator/orders/validated",
+            },
+            {
+              title: "préparées",
+              url: "/preparator/orders/prepared",
+            },
+            {
+              title: "livrées",
+              url: "/preparator/orders/delivered",
+            },
+          ],
         },
       
       ];
