@@ -141,21 +141,8 @@ export function AppSidebar({
           title: "Commandes",
           url: "/coordinator/orders",
           icon: Inbox,
-          items: [
-            {
-              title: "En Attente de Validation",
-              url: "/coordinator/orders/pending",
-            },
-            {
-              title: "Deja Validées",
-              url: "/coordinator/orders/validated",
-            },
-            {
-              title: "Anullées",
-              url: "/coordinator/orders/cancelled",
-            },
-          ],
         },
+      
       ];
       break;
     case "ORDER_PREPARER":
@@ -173,6 +160,10 @@ export function AppSidebar({
             {
               title: "Deja Validées",
               url: "/preparator/orders/validated",
+            },
+            {
+              title: "En cours de préparation",
+              url: "/preparator/orders/inpreparation",
             },
             {
               title: "préparées",

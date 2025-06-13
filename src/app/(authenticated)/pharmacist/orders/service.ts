@@ -231,6 +231,179 @@ export async function getValidatedOrders(): Promise<OrderForValidation[]> {
   }));
 }
 
+export async function getOrdersInPreparation(): Promise<OrderForValidation[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      status: {
+        in: [OrderStatus.IN_PREPARATION],
+      },
+    },
+    include: {
+      service: { 
+        select: { 
+          id: true,
+          name: true 
+        } 
+      },
+      createdBy: { 
+        select: { 
+          id: true,
+          firstName: true, 
+          lastName: true 
+        } 
+      },
+      orderItems: {
+        include: {
+          medication: {
+            select: {
+              id: true,
+              commercialName: true,
+              dci: true,
+              form: true,
+              dosage: true,
+              batches: {
+                where: {
+                  currentQuantity: { gt: 0 },
+                  expirationDate: { gte: new Date() },
+                },
+                orderBy: { expirationDate: "asc" },
+              },
+            },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+      },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return orders.map((order) => ({
+    ...order,
+    orderItems: order.orderItems.map((item) => ({
+      ...item,
+      totalAvailableStock: item.medication.batches.reduce(
+        (sum, batch) => sum + batch.currentQuantity,
+        0
+      ),
+    })),
+  }));
+}
+
+export async function getPreparedOrders(): Promise<OrderForValidation[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      status: {
+        in: [OrderStatus.PREPARED],
+      },
+    },
+    include: {
+      service: { 
+        select: { 
+          id: true,
+          name: true 
+        } 
+      },
+      createdBy: { 
+        select: { 
+          id: true,
+          firstName: true, 
+          lastName: true 
+        } 
+      },
+      orderItems: {
+        include: {
+          medication: {
+            select: {
+              id: true,
+              commercialName: true,
+              dci: true,
+              form: true,
+              dosage: true,
+              batches: {
+                where: {
+                  currentQuantity: { gt: 0 },
+                  expirationDate: { gte: new Date() },
+                },
+                orderBy: { expirationDate: "asc" },
+              },
+            },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+      },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return orders.map((order) => ({
+    ...order,
+    orderItems: order.orderItems.map((item) => ({
+      ...item,
+      totalAvailableStock: item.medication.batches.reduce(
+        (sum, batch) => sum + batch.currentQuantity,
+        0
+      ),
+    })),
+  }));
+}
+
+export async function getDeliveredOrders(): Promise<OrderForValidation[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      status: {
+        in: [OrderStatus.DELIVERED],
+      },
+    },
+    include: {
+      service: { 
+        select: { 
+          id: true,
+          name: true 
+        } 
+      },
+      createdBy: { 
+        select: { 
+          id: true,
+          firstName: true, 
+          lastName: true 
+        } 
+      },
+      orderItems: {
+        include: {
+          medication: {
+            select: {
+              id: true,
+              commercialName: true,
+              dci: true,
+              form: true,
+              dosage: true,
+              batches: {
+                where: {
+                  currentQuantity: { gt: 0 },
+                  expirationDate: { gte: new Date() },
+                },
+                orderBy: { expirationDate: "asc" },
+              },
+            },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+      },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return orders.map((order) => ({
+    ...order,
+    orderItems: order.orderItems.map((item) => ({
+      ...item,
+      totalAvailableStock: item.medication.batches.reduce(
+        (sum, batch) => sum + batch.currentQuantity,
+        0
+      ),
+    })),
+  }));
+}
 
 export async function getCancelledOrders(): Promise<OrderForValidation[]> {
   const orders = await prisma.order.findMany({
@@ -703,6 +876,324 @@ export async function cancelOrder(
     return { 
       success: false, 
       error: "Erreur lors de l'annulation de la commande. Veuillez réessayer." 
+    };
+  }
+}
+
+export async function startOrderPreparation(
+  orderId: string,
+  preparedByUserId: string,
+  preparationNotes?: string
+) {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      // Get the order with current items
+      const order = await tx.order.findUnique({
+        where: { id: orderId },
+        include: { 
+          orderItems: { 
+            include: { 
+              medication: {
+                select: {
+                  id: true,
+                  commercialName: true,
+                  dci: true,
+                }
+              } 
+            } 
+          } 
+        },
+      });
+
+      if (!order) {
+        return { success: false, error: "Commande non trouvée." };
+      }
+
+      // Check if order can be moved to preparation
+      if (order.status !== OrderStatus.VALIDATED) {
+        return { 
+          success: false, 
+          error: "Seules les commandes validées peuvent être mises en préparation." 
+        };
+      }
+
+      // Update all validated order items to preparation status
+      const itemPreparationResults = [];
+      
+      for (const item of order.orderItems) {
+        if (item.status === OrderItemStatus.VALIDATED || item.status === OrderItemStatus.PARTIALLY_VALIDATED) {
+          await tx.orderItem.update({
+            where: { id: item.id },
+            data: {
+              status: item.status === OrderItemStatus.VALIDATED 
+                ? OrderItemStatus.VALIDATED 
+                : OrderItemStatus.PARTIALLY_VALIDATED, // Keep current status for tracking
+            },
+          });
+
+          itemPreparationResults.push({
+            id: item.id,
+            medicationName: item.medication.commercialName,
+            validatedQuantity: item.validatedQuantity,
+            status: item.status,
+          });
+        }
+      }
+
+      // Update the order notes if provided
+      const updatedNotes = preparationNotes 
+        ? (order.notes ? `${order.notes}\n\nPréparation: ${preparationNotes}` : `Préparation: ${preparationNotes}`)
+        : order.notes;
+
+      // Update the order status to in preparation
+      await tx.order.update({
+        where: { id: orderId },
+        data: {
+          status: OrderStatus.IN_PREPARATION,
+          preparedById: preparedByUserId,
+          notes: updatedNotes,
+        },
+      });
+
+      // Revalidate paths
+      revalidatePath(`/preparator/orders/validated`);
+      revalidatePath(`/preparator/orders/inpreparation`);
+      revalidatePath("/preparator/dashboard");
+
+      return {
+        success: true,
+        message: `Commande mise en préparation avec succès. ${itemPreparationResults.length} article(s) en préparation.`,
+        newStatus: OrderStatus.IN_PREPARATION,
+        itemResults: itemPreparationResults,
+        preparationNotes: preparationNotes,
+      };
+    });
+  } catch (error) {
+    console.error("Error starting order preparation:", error);
+    return { 
+      success: false, 
+      error: "Erreur lors de la mise en préparation de la commande. Veuillez réessayer." 
+    };
+  }
+}
+
+export async function completeOrderPreparation(
+  orderId: string,
+  preparedByUserId: string,
+  preparedItems: Array<{
+    id: string;
+    preparedQuantity: number;
+  }>,
+  completionNotes?: string
+) {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      // Get the order with current items
+      const order = await tx.order.findUnique({
+        where: { id: orderId },
+        include: { 
+          orderItems: { 
+            include: { 
+              medication: {
+                select: {
+                  id: true,
+                  commercialName: true,
+                  dci: true,
+                }
+              } 
+            } 
+          } 
+        },
+      });
+
+      if (!order) {
+        return { success: false, error: "Commande non trouvée." };
+      }
+
+      // Check if order can be completed
+      if (order.status !== OrderStatus.IN_PREPARATION) {
+        return { 
+          success: false, 
+          error: "Seules les commandes en préparation peuvent être finalisées." 
+        };
+      }
+
+      // Update each prepared item
+      const itemPreparationResults = [];
+      
+      for (const preparedItem of preparedItems) {
+        const dbItem = order.orderItems.find((i) => i.id === preparedItem.id);
+        if (!dbItem) {
+          return { 
+            success: false, 
+            error: `Article de commande ${preparedItem.id} non trouvé.` 
+          };
+        }
+
+        // Validate prepared quantity
+        if (preparedItem.preparedQuantity < 0) {
+          return { 
+            success: false, 
+            error: `La quantité préparée pour ${dbItem.medication.commercialName} ne peut être négative.` 
+          };
+        }
+
+        const maxQuantity = dbItem.validatedQuantity || 0;
+        if (preparedItem.preparedQuantity > maxQuantity) {
+          return { 
+            success: false, 
+            error: `La quantité préparée (${preparedItem.preparedQuantity}) pour ${dbItem.medication.commercialName} ne peut excéder la quantité validée (${maxQuantity}).` 
+          };
+        }
+
+        // Update the order item with prepared quantity and status
+        await tx.orderItem.update({
+          where: { id: preparedItem.id },
+          data: {
+            preparedQuantity: preparedItem.preparedQuantity,
+            status: OrderItemStatus.PREPARED,
+          },
+        });
+
+        itemPreparationResults.push({
+          id: preparedItem.id,
+          medicationName: dbItem.medication.commercialName,
+          validatedQuantity: dbItem.validatedQuantity,
+          preparedQuantity: preparedItem.preparedQuantity,
+          status: OrderItemStatus.PREPARED,
+        });
+      }
+
+      // Update the order notes if provided
+      const updatedNotes = completionNotes 
+        ? (order.notes ? `${order.notes}\n\nPréparation terminée: ${completionNotes}` : `Préparation terminée: ${completionNotes}`)
+        : order.notes;
+
+      // Update the order status to prepared
+      await tx.order.update({
+        where: { id: orderId },
+        data: {
+          status: OrderStatus.PREPARED,
+          preparedAt: new Date(),
+          preparedById: preparedByUserId,
+          notes: updatedNotes,
+        },
+      });
+
+      // Revalidate paths
+      revalidatePath(`/preparator/orders/inpreparation`);
+      revalidatePath(`/preparator/orders/prepared`);
+      revalidatePath("/preparator/dashboard");
+
+      return {
+        success: true,
+        message: `Préparation terminée avec succès. ${itemPreparationResults.length} article(s) préparé(s).`,
+        newStatus: OrderStatus.PREPARED,
+        itemResults: itemPreparationResults,
+        completionNotes: completionNotes,
+      };
+    });
+  } catch (error) {
+    console.error("Error completing order preparation:", error);
+    return { 
+      success: false, 
+      error: "Erreur lors de la finalisation de la préparation. Veuillez réessayer." 
+    };
+  }
+}
+
+
+export async function deliverOrder(
+  orderId: string,
+  deliveredByUserId: string,
+  deliveryNotes?: string
+) {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      // Get the order with current items
+      const order = await tx.order.findUnique({
+        where: { id: orderId },
+        include: { 
+          orderItems: { 
+            include: { 
+              medication: {
+                select: {
+                  id: true,
+                  commercialName: true,
+                  dci: true,
+                }
+              } 
+            } 
+          } 
+        },
+      });
+
+      if (!order) {
+        return { success: false, error: "Commande non trouvée." };
+      }
+
+      // Check if order can be delivered
+      if (order.status !== OrderStatus.PREPARED) {
+        return { 
+          success: false, 
+          error: "Seules les commandes préparées peuvent être livrées." 
+        };
+      }
+
+      // Update all prepared order items to delivered status
+      const itemDeliveryResults = [];
+      
+      for (const item of order.orderItems) {
+        if (item.status === OrderItemStatus.PREPARED) {
+          await tx.orderItem.update({
+            where: { id: item.id },
+            data: {
+              status: OrderItemStatus.DELIVERED,
+            },
+          });
+
+          itemDeliveryResults.push({
+            id: item.id,
+            medicationName: item.medication.commercialName,
+            preparedQuantity: item.preparedQuantity,
+            status: OrderItemStatus.DELIVERED,
+          });
+        }
+      }
+
+      // Update the order notes if provided
+      const updatedNotes = deliveryNotes 
+        ? (order.notes ? `${order.notes}\n\nLivraison: ${deliveryNotes}` : `Livraison: ${deliveryNotes}`)
+        : order.notes;
+
+      // Update the order status to delivered
+      await tx.order.update({
+        where: { id: orderId },
+        data: {
+          status: OrderStatus.DELIVERED,
+          deliveredAt: new Date(),
+          notes: updatedNotes,
+        },
+      });
+
+      // Revalidate paths
+      revalidatePath(`/preparator/orders/prepared`);
+      revalidatePath(`/preparator/orders/delivered`);
+      revalidatePath("/preparator/dashboard");
+
+      return {
+        success: true,
+        message: `Commande livrée avec succès. ${itemDeliveryResults.length} article(s) livré(s).`,
+        newStatus: OrderStatus.DELIVERED,
+        itemResults: itemDeliveryResults,
+        deliveryNotes: deliveryNotes,
+      };
+    });
+  } catch (error) {
+    console.error("Error delivering order:", error);
+    return { 
+      success: false, 
+      error: "Erreur lors de la livraison de la commande. Veuillez réessayer." 
     };
   }
 }
