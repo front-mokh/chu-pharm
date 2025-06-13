@@ -89,7 +89,7 @@ export default function ValidatedOrdersTable({
                 <TableCell className="text-right">
                   <Button asChild variant="outline" size="sm">
                     <Link
-                      href={`/pharmacist/orders/${order.id}/validated`}
+                      href={`/pharmacist/orders/${order.id}`}
                     >
                       <Eye className="mr-2 h-4 w-4" /> Voir
                     </Link>
