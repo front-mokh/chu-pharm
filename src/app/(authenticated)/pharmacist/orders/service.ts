@@ -173,6 +173,121 @@ export async function getPendingOrdersForValidation(): Promise<OrderForValidatio
   }));
 }
 
+export async function getValidatedOrders(): Promise<OrderForValidation[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      status: {
+        in: [OrderStatus.VALIDATED],
+      },
+    },
+    include: {
+      service: { 
+        select: { 
+          id: true,
+          name: true 
+        } 
+      },
+      createdBy: { 
+        select: { 
+          id: true,
+          firstName: true, 
+          lastName: true 
+        } 
+      },
+      orderItems: {
+        include: {
+          medication: {
+            select: {
+              id: true,
+              commercialName: true,
+              dci: true,
+              form: true,
+              dosage: true,
+              batches: {
+                where: {
+                  currentQuantity: { gt: 0 },
+                  expirationDate: { gte: new Date() },
+                },
+                orderBy: { expirationDate: "asc" },
+              },
+            },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+      },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return orders.map((order) => ({
+    ...order,
+    orderItems: order.orderItems.map((item) => ({
+      ...item,
+      totalAvailableStock: item.medication.batches.reduce(
+        (sum, batch) => sum + batch.currentQuantity,
+        0
+      ),
+    })),
+  }));
+}
+export async function getCancelledOrders(): Promise<OrderForValidation[]> {
+  const orders = await prisma.order.findMany({
+    where: {
+      status: {
+        in: [OrderStatus.CANCELLED],
+      },
+    },
+    include: {
+      service: { 
+        select: { 
+          id: true,
+          name: true 
+        } 
+      },
+      createdBy: { 
+        select: { 
+          id: true,
+          firstName: true, 
+          lastName: true 
+        } 
+      },
+      orderItems: {
+        include: {
+          medication: {
+            select: {
+              id: true,
+              commercialName: true,
+              dci: true,
+              form: true,
+              dosage: true,
+              batches: {
+                where: {
+                  currentQuantity: { gt: 0 },
+                  expirationDate: { gte: new Date() },
+                },
+                orderBy: { expirationDate: "asc" },
+              },
+            },
+          },
+        },
+        orderBy: { createdAt: "asc" },
+      },
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return orders.map((order) => ({
+    ...order,
+    orderItems: order.orderItems.map((item) => ({
+      ...item,
+      totalAvailableStock: item.medication.batches.reduce(
+        (sum, batch) => sum + batch.currentQuantity,
+        0
+      ),
+    })),
+  }));
+}
+
 // Fixed validation function
 export async function validateOrder(
   orderId: string,

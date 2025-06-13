@@ -118,6 +118,14 @@ export function AppSidebar({
               title: "En Attente de Validation",
               url: "/pharmacist/orders/pending",
             },
+            {
+              title: "Deja Validées",
+              url: "/pharmacist/orders/validated",
+            },
+            {
+              title: "Anullées",
+              url: "/pharmacist/orders/cancelled",
+            },
           ],
         },
       ];
