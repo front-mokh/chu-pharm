@@ -45,7 +45,7 @@ export default async function RootLayout({
     case "SERVICE_COORDINATOR":
       redirect("/coordinator");
     case "ORDER_PREPARER":
-      redirect("/order-preparer");
+      redirect("/preparator");
     default:
       console.log("Unknown role:", role);
       redirect("/auth/signin");

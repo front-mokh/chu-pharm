@@ -138,9 +138,23 @@ export function AppSidebar({
           icon: LayoutDashboard,
         },
         {
-          title: "Orders",
-          url: "/coordinator/orders",
-          icon: Tags,
+          title: "Commandes",
+          url: "/preparator/orders",
+          icon: Inbox,
+          items: [
+            {
+              title: "En Attente de Validation",
+              url: "/preparator/orders/validated",
+            },
+            {
+              title: "Deja Validées",
+              url: "/preparator/orders/prepared",
+            },
+            {
+              title: "Anullées",
+              url: "/preparator/orders/delivered",
+            },
+          ],
         },
       ];
       break;
@@ -148,24 +162,15 @@ export function AppSidebar({
       links = [
         {
           title: "Dashboard",
-          url: "/order-preparer/dashboard",
+          url: "/preparator/dashboard",
           icon: LayoutDashboard,
         },
         {
-          title: "Utilisateurs",
-          url: "/order-preparer/users",
+          title: "orders",
+          url: "/preparator/orders",
           icon: UsersRound,
         },
-        {
-          title: "Services",
-          url: "/order-preparer/services",
-          icon: Inbox,
-        },
-        {
-          title: "Fournisseurs",
-          url: "/order-preparer/suppliers",
-          icon: Contact,
-        },
+      
       ];
       break;
     default:

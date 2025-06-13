@@ -230,6 +230,8 @@ export async function getValidatedOrders(): Promise<OrderForValidation[]> {
     })),
   }));
 }
+
+
 export async function getCancelledOrders(): Promise<OrderForValidation[]> {
   const orders = await prisma.order.findMany({
     where: {
@@ -288,173 +290,7 @@ export async function getCancelledOrders(): Promise<OrderForValidation[]> {
   }));
 }
 
-// Fixed validation function
-export async function validateOrder(
-  orderId: string,
-  validatedByUserId: string,
-  validatedItems: Array<{
-    id: string;
-    validatedQuantity: number;
-    status: OrderItemStatus;
-  }>
-) {
-  try {
-    return await prisma.$transaction(async (tx) => {
-      // Get the order with current items
-      const order = await tx.order.findUnique({
-        where: { id: orderId },
-        include: { 
-          orderItems: { 
-            include: { 
-              medication: {
-                select: {
-                  id: true,
-                  commercialName: true,
-                  dci: true,
-                }
-              } 
-            } 
-          } 
-        },
-      });
 
-      if (!order) {
-        return { success: false, error: "Commande non trouvée." };
-      }
-
-      // Check if order can be validated
-      if (![OrderStatus.SUBMITTED, OrderStatus.PARTIALLY_VALIDATED].includes(order.status)) {
-        return { 
-          success: false, 
-          error: "Cette commande n'est plus en attente de validation." 
-        };
-      }
-
-      // Validate each item
-      const itemValidationResults = [];
-      
-      for (const validatedItem of validatedItems) {
-        const dbItem = order.orderItems.find((i) => i.id === validatedItem.id);
-        if (!dbItem) {
-          return { 
-            success: false, 
-            error: `Article de commande ${validatedItem.id} non trouvé.` 
-          };
-        }
-
-        let newValidatedQuantity = validatedItem.validatedQuantity;
-        let newStatus = validatedItem.status;
-
-        // Handle different statuses
-        if (newStatus === OrderItemStatus.NOT_AVAILABLE) {
-          newValidatedQuantity = 0;
-        } else {
-          // Validate quantity constraints
-          if (newValidatedQuantity < 0) {
-            return { 
-              success: false, 
-              error: `La quantité validée pour ${dbItem.medication.commercialName} ne peut être négative.` 
-            };
-          }
-          
-          if (newValidatedQuantity > dbItem.requestedQuantity) {
-            return { 
-              success: false, 
-              error: `La quantité validée (${newValidatedQuantity}) pour ${dbItem.medication.commercialName} ne peut excéder la quantité demandée (${dbItem.requestedQuantity}).` 
-            };
-          }
-
-          // Determine status based on quantity
-          if (newValidatedQuantity === 0) {
-            newStatus = OrderItemStatus.NOT_AVAILABLE;
-          } else if (newValidatedQuantity < dbItem.requestedQuantity) {
-            newStatus = OrderItemStatus.PARTIALLY_VALIDATED;
-          } else {
-            newStatus = OrderItemStatus.VALIDATED;
-          }
-        }
-
-        // Update the order item
-        await tx.orderItem.update({
-          where: { id: validatedItem.id },
-          data: {
-            validatedQuantity: newValidatedQuantity,
-            status: newStatus,
-          },
-        });
-
-        itemValidationResults.push({
-          id: validatedItem.id,
-          requestedQuantity: dbItem.requestedQuantity,
-          validatedQuantity: newValidatedQuantity,
-          status: newStatus,
-        });
-      }
-
-      // Determine overall order status
-      const totalItemsValidated = itemValidationResults.filter(
-        item => item.status === OrderItemStatus.VALIDATED
-      ).length;
-      
-      const totalItemsPartiallyValidated = itemValidationResults.filter(
-        item => item.status === OrderItemStatus.PARTIALLY_VALIDATED
-      ).length;
-      
-      const totalItemsNotAvailable = itemValidationResults.filter(
-        item => item.status === OrderItemStatus.NOT_AVAILABLE
-      ).length;
-
-      const totalItems = itemValidationResults.length;
-
-      let newOrderStatus: OrderStatus;
-      
-      if (totalItemsValidated === totalItems) {
-        // All items fully validated
-        newOrderStatus = OrderStatus.VALIDATED;
-      } else if (totalItemsNotAvailable === totalItems) {
-        // All items not available - still partially validated (not cancelled)
-        newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
-      } else if (totalItemsValidated > 0 || totalItemsPartiallyValidated > 0) {
-        // Some items validated or partially validated
-        newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
-      } else {
-        // Fallback
-        newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
-      }
-
-      // Update the order
-      await tx.order.update({
-        where: { id: orderId },
-        data: {
-          status: newOrderStatus,
-          validatedAt: new Date(),
-          validatedById: validatedByUserId,
-        },
-      });
-
-      // Revalidate paths
-      revalidatePath(`/dashboard/pharmacist/orders/pending`);
-      revalidatePath(`/dashboard/pharmacist/orders/${orderId}/validate`);
-      revalidatePath("/dashboard/pharmacist/dashboard");
-
-      // Return success with detailed information
-      return {
-        success: true,
-        message: `Validation terminée. ${totalItemsValidated} article(s) validé(s), ${totalItemsPartiallyValidated} partiellement validé(s), ${totalItemsNotAvailable} non disponible(s).`,
-        newStatus: newOrderStatus,
-        itemResults: itemValidationResults,
-      };
-    });
-  } catch (error) {
-    console.error("Error validating order:", error);
-    return { 
-      success: false, 
-      error: "Erreur lors de la validation de la commande. Veuillez réessayer." 
-    };
-  }
-}
-
-// Alternative validation function with notes support
 export async function validateOrderWithNotes(
   orderId: string,
   validatedByUserId: string,
@@ -611,6 +447,262 @@ export async function validateOrderWithNotes(
     return { 
       success: false, 
       error: "Erreur lors de la validation de la commande. Veuillez réessayer." 
+    };
+  }
+}
+
+export async function validateOrder(
+  orderId: string,
+  validatedByUserId: string,
+  validatedItems: Array<{
+    id: string;
+    validatedQuantity: number;
+    status: OrderItemStatus;
+  }>
+) {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      // Get the order with current items
+      const order = await tx.order.findUnique({
+        where: { id: orderId },
+        include: { 
+          orderItems: { 
+            include: { 
+              medication: {
+                select: {
+                  id: true,
+                  commercialName: true,
+                  dci: true,
+                }
+              } 
+            } 
+          } 
+        },
+      });
+
+      if (!order) {
+        return { success: false, error: "Commande non trouvée." };
+      }
+
+      // Check if order can be validated
+      if (![OrderStatus.SUBMITTED, OrderStatus.PARTIALLY_VALIDATED].includes(order.status)) {
+        return { 
+          success: false, 
+          error: "Cette commande n'est plus en attente de validation." 
+        };
+      }
+
+      // Validate each item
+      const itemValidationResults = [];
+      
+      for (const validatedItem of validatedItems) {
+        const dbItem = order.orderItems.find((i) => i.id === validatedItem.id);
+        if (!dbItem) {
+          return { 
+            success: false, 
+            error: `Article de commande ${validatedItem.id} non trouvé.` 
+          };
+        }
+
+        let newValidatedQuantity = validatedItem.validatedQuantity;
+        let newStatus = validatedItem.status;
+
+        // Handle different statuses
+        if (newStatus === OrderItemStatus.NOT_AVAILABLE) {
+          newValidatedQuantity = 0;
+        } else {
+          // Validate quantity constraints
+          if (newValidatedQuantity < 0) {
+            return { 
+              success: false, 
+              error: `La quantité validée pour ${dbItem.medication.commercialName} ne peut être négative.` 
+            };
+          }
+          
+          if (newValidatedQuantity > dbItem.requestedQuantity) {
+            return { 
+              success: false, 
+              error: `La quantité validée (${newValidatedQuantity}) pour ${dbItem.medication.commercialName} ne peut excéder la quantité demandée (${dbItem.requestedQuantity}).` 
+            };
+          }
+
+          // Determine status based on quantity
+          if (newValidatedQuantity === 0) {
+            newStatus = OrderItemStatus.NOT_AVAILABLE;
+          } else if (newValidatedQuantity < dbItem.requestedQuantity) {
+            newStatus = OrderItemStatus.PARTIALLY_VALIDATED;
+          } else {
+            newStatus = OrderItemStatus.VALIDATED;
+          }
+        }
+
+        // Update the order item
+        await tx.orderItem.update({
+          where: { id: validatedItem.id },
+          data: {
+            validatedQuantity: newValidatedQuantity,
+            status: newStatus,
+          },
+        });
+
+        itemValidationResults.push({
+          id: validatedItem.id,
+          requestedQuantity: dbItem.requestedQuantity,
+          validatedQuantity: newValidatedQuantity,
+          status: newStatus,
+        });
+      }
+
+      // Determine overall order status
+      const totalItemsValidated = itemValidationResults.filter(
+        item => item.status === OrderItemStatus.VALIDATED
+      ).length;
+      
+      const totalItemsPartiallyValidated = itemValidationResults.filter(
+        item => item.status === OrderItemStatus.PARTIALLY_VALIDATED
+      ).length;
+      
+      const totalItemsNotAvailable = itemValidationResults.filter(
+        item => item.status === OrderItemStatus.NOT_AVAILABLE
+      ).length;
+
+      const totalItems = itemValidationResults.length;
+
+      let newOrderStatus: OrderStatus;
+      
+      if (totalItemsValidated === totalItems) {
+        // All items fully validated
+        newOrderStatus = OrderStatus.VALIDATED;
+      } else if (totalItemsNotAvailable === totalItems) {
+        // All items not available - still partially validated (not cancelled)
+        newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
+      } else if (totalItemsValidated > 0 || totalItemsPartiallyValidated > 0) {
+        // Some items validated or partially validated
+        newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
+      } else {
+        // Fallback
+        newOrderStatus = OrderStatus.PARTIALLY_VALIDATED;
+      }
+
+      // Update the order
+      await tx.order.update({
+        where: { id: orderId },
+        data: {
+          status: newOrderStatus,
+          validatedAt: new Date(),
+          validatedById: validatedByUserId,
+        },
+      });
+
+      // Revalidate paths
+      revalidatePath(`/pharmacist/orders/pending`);
+      revalidatePath("/pharmacist/validated");
+      revalidatePath("/pharmacist/dashboard");
+
+      // Return success with detailed information
+      return {
+        success: true,
+        message: `Validation terminée. ${totalItemsValidated} article(s) validé(s), ${totalItemsPartiallyValidated} partiellement validé(s), ${totalItemsNotAvailable} non disponible(s).`,
+        newStatus: newOrderStatus,
+        itemResults: itemValidationResults,
+      };
+    });
+  } catch (error) {
+    console.error("Error validating order:", error);
+    return { 
+      success: false, 
+      error: "Erreur lors de la validation de la commande. Veuillez réessayer." 
+    };
+  }
+}
+
+export async function cancelOrder(
+  orderId: string,
+  cancelledByUserId: string,
+  cancellationReason?: string
+) {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      // Get the order with current items
+      const order = await tx.order.findUnique({
+        where: { id: orderId },
+        include: { 
+          orderItems: { 
+            include: { 
+              medication: {
+                select: {
+                  id: true,
+                  commercialName: true,
+                  dci: true,
+                }
+              } 
+            } 
+          } 
+        },
+      });
+
+      if (!order) {
+        return { success: false, error: "Commande non trouvée." };
+      }
+
+      // Check if order can be cancelled
+      if (![OrderStatus.SUBMITTED, OrderStatus.PARTIALLY_VALIDATED, OrderStatus.VALIDATED].includes(order.status)) {
+        return { 
+          success: false, 
+          error: "Cette commande ne peut plus être annulée." 
+        };
+      }
+
+      // Update all order items to cancelled status
+      const itemCancellationResults = [];
+      
+      for (const item of order.orderItems) {
+        await tx.orderItem.update({
+          where: { id: item.id },
+          data: {
+            status: OrderItemStatus.CANCELLED,
+            validatedQuantity: 0, // Reset validated quantity
+          },
+        });
+
+        itemCancellationResults.push({
+          id: item.id,
+          medicationName: item.medication.commercialName,
+          requestedQuantity: item.requestedQuantity,
+          status: OrderItemStatus.CANCELLED,
+        });
+      }
+
+      // Update the order status to cancelled
+      await tx.order.update({
+        where: { id: orderId },
+        data: {
+          status: OrderStatus.CANCELLED,
+          notes: cancellationReason ? 
+            (order.notes ? `${order.notes}\n\nAnnulée: ${cancellationReason}` : `Annulée: ${cancellationReason}`) 
+            : order.notes,
+        },
+      });
+
+      // Revalidate paths
+      revalidatePath(`/pharmacist/orders/pending`);
+      revalidatePath("/pharmacist/cancelled");
+      revalidatePath("/pharmacist/dashboard");
+
+      // Return success with detailed information
+      return {
+        success: true,
+        message: `Commande annulée avec succès. ${itemCancellationResults.length} article(s) annulé(s).`,
+        newStatus: OrderStatus.CANCELLED,
+        itemResults: itemCancellationResults,
+        cancellationReason: cancellationReason,
+      };
+    });
+  } catch (error) {
+    console.error("Error cancelling order:", error);
+    return { 
+      success: false, 
+      error: "Erreur lors de l'annulation de la commande. Veuillez réessayer." 
     };
   }
 }
