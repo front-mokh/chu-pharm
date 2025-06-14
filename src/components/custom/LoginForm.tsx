@@ -51,21 +51,33 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      // Clear any existing session data
+      if (typeof window !== 'undefined') {
+        sessionStorage.clear();
+      }
+
       const result = await signIn("credentials", {
         redirect: false,
         email: values.email,
         password: values.password,
       });
 
+      console.log("Sign in result:", result);
+
       if (result?.error) {
+        console.error("Sign in error:", result.error);
         setError("Adresse email ou mot de passe invalide");
-        setLoading(false);
+      } else if (result?.ok) {
+        console.log("Login successful, redirecting...");
+        // Force a hard redirect to ensure session is properly established
+        window.location.href = "/redirect";
       } else {
-        router.push("/redirect");
+        setError("Une erreur s'est produite. Veuillez réessayer.");
       }
     } catch (err) {
       console.error("Login error:", err);
       setError("Une erreur s'est produite. Veuillez réessayer.");
+    } finally {
       setLoading(false);
     }
   };
