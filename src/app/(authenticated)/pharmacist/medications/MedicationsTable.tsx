@@ -10,9 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import TableWrapper from "@/components/custom/TableWrapper"; // Ensure this component exists
-import UpdateAction from "@/components/custom/UpdateAction"; // Ensure this component exists
-import DeleteAction from "@/components/custom/DeleteAction"; // Ensure this component exists
+import TableWrapper from "@/components/custom/TableWrapper";
+import UpdateAction from "@/components/custom/UpdateAction";
+import DeleteAction from "@/components/custom/DeleteAction";
 
 import {
   Medication,
@@ -21,15 +21,14 @@ import {
 } from "@/generated/prisma";
 import {
   MedicationFormLabels,
-
 } from "@/utils/translations"; 
 import UpdateMedicationDialog from "./UpdateMedicationDialog";
 import DeleteMedicationDialog from "./DeleteMedicationDialog";
 
 interface MedicationsTableProps {
   medications: Array<Medication & { therapeuticClass: PrismaTherapeuticClass }>;
-  therapeuticClasses: PrismaTherapeuticClass[]; // Needed for UpdateDialog's therapeutic class dropdown
-  subClasses: SubClass [];
+  therapeuticClasses: PrismaTherapeuticClass[];
+  subClasses: SubClass[];
 }
 
 export default function MedicationsTable({
@@ -66,7 +65,7 @@ export default function MedicationsTable({
           {medications.length === 0 ? (
             <TableRow>
               <TableCell
-                colSpan={8}
+                colSpan={10} // Fixed: was 8, should be 10 for all columns
                 className="h-16 text-center text-muted-foreground"
               >
                 Aucun médicament trouvé.
@@ -83,7 +82,7 @@ export default function MedicationsTable({
                 <TableCell>{MedicationFormLabels[medication.form]}</TableCell>
                 <TableCell>{medication.dosage}</TableCell>
                 <TableCell>{medication.therapeuticClass.name}</TableCell>
-                <TableCell>{medication.subClass.name}</TableCell>
+                <TableCell>{medication.subClass?.name || 'N/A'}</TableCell>
                 <TableCell className="text-center">
                   {medication.minStockLevel}
                 </TableCell>
@@ -102,13 +101,13 @@ export default function MedicationsTable({
                 <TableCell className="text-right">
                   <div className="flex justify-end space-x-2">
                     <UpdateMedicationDialog
-                      trigger={<UpdateAction />}
+                      trigger={<UpdateAction asChild />}
                       medication={medication}
                       therapeuticClasses={therapeuticClasses}
                       subClasses={subClasses}
                     />
                     <DeleteMedicationDialog
-                      trigger={<DeleteAction />}
+                      trigger={<DeleteAction asChild />}
                       medication={{
                         id: medication.id,
                         commercialName: medication.commercialName,
